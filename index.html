@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blook Labs Deluxe Edition</title>
+    <title>Blooket Deluxe Simulator</title>
     <style>
         @import url('https://googleapis.com');
 
@@ -12,337 +12,560 @@
             font-family: 'Nunito', sans-serif; 
             margin: 0; 
             padding: 0; 
-            transition: all 0.2s ease-in-out;
-        }
-
-        h1, h2, h3, .brand {
-            font-family: 'Fredoka One', cursive;
+            user-select: none;
         }
 
         body { 
             display: flex; 
-            background: linear-gradient(135deg, #120024 0%, #05000d 100%); 
+            background: #111424; 
             color: #ffffff;
             height: 100vh; 
             overflow: hidden; 
         }
-        
-        /* Sidebar layout */
+
+        /* Blooket Purple Sidebar Navigation */
         #sidebar { 
-            width: 280px; 
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            width: 260px; 
+            background: #2b1c4e; 
             display: flex; 
             flex-direction: column; 
-            padding: 25px; 
-            gap: 12px; 
-            display: none; 
-        }
-        #sidebar h2 { 
-            text-align: center; color: #ffcc00; font-size: 24px;
-            letter-spacing: 1px; margin-bottom: 5px;
-            text-shadow: 0 4px 10px rgba(255, 204, 0, 0.3);
-        }
-        .coin-widget {
-            background: linear-gradient(135deg, #ffd700 0%, #ff8800 100%);
-            padding: 15px; border-radius: 16px; text-align: center; 
-            font-weight: 900; font-size: 20px; color: #3a0066;
-            box-shadow: 0 6px 20px rgba(255, 136, 0, 0.3); margin-bottom: 15px;
-        }
-        .nav-btn { 
-            background: rgba(255, 255, 255, 0.04); color: #e0ccff; 
-            border: 1px solid rgba(255, 255, 255, 0.03); 
-            padding: 14px 20px; border-radius: 14px; cursor: pointer; 
-            text-align: left; font-size: 16px; font-weight: 700; 
-        }
-        .nav-btn:hover { 
-            background: #7700cc; color: white; transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(119, 0, 204, 0.4);
-        }
-        .nav-btn.active-btn {
-            background: #ff007f; color: white; border-color: #ff007f;
-            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
-        }
-        
-        /* Dashboard Container Windows */
-        #main-content { flex: 1; padding: 40px; overflow-y: auto; display: none; }
-        .window { 
-            display: none; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px);
-            padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); height: 100%; 
-            animation: fadeIn 0.4s ease-out;
-        }
-        .window.active { display: block; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            padding: 20px; 
+            gap: 10px; 
+            box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+            z-index: 10;
+            display: none;
         }
 
-        /* Authentication View Screen */
+        .brand-header {
+            font-family: 'Fredoka One', cursive;
+            font-size: 28px;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-card {
+            background: #3c2a6b;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border-bottom: 4px solid #1f1438;
+            margin-bottom: 10px;
+        }
+
+        #user-display {
+            font-family: 'Fredoka One', cursive;
+            font-size: 20px;
+            color: #ffcc00;
+        }
+
+        .coin-widget {
+            background: #00a86b;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 20px;
+            color: white;
+            border-bottom: 4px solid #007047;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn { 
+            background: transparent;
+            color: #bfaeff; 
+            border: none;
+            padding: 14px 15px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            text-align: left; 
+            font-size: 16px; 
+            font-weight: 800; 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn:hover { 
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .nav-btn.active-btn {
+            background: #3b82f6; 
+            color: white;
+            box-shadow: 0 4px 0 #1d4ed8;
+        }
+
+        /* Dynamic Application Workspace Windows */
+        #main-content { 
+            flex: 1; 
+            padding: 30px; 
+            overflow-y: auto; 
+            background: #0f111a;
+            display: none;
+        }
+
+        .window { 
+            display: none; 
+            animation: paneFade 0.25s ease-out;
+            height: 100%;
+        }
+
+        .window.active { display: block; }
+        
+        @keyframes paneFade {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .section-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .section-desc {
+            color: #717694;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        /* Grid Frameworks */
+        .card-grid { 
+            display: flex; 
+            gap: 20px; 
+            flex-wrap: wrap; 
+            padding-bottom: 30px; 
+        }
+
+        /* Authentic Blooket Pack Boxes Styling */
+        .pack-card {
+            background: #1c1f30;
+            border-radius: 16px; 
+            text-align: center; 
+            width: 210px;
+            padding: 20px;
+            border-bottom: 6px solid #11131f;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.15s ease;
+        }
+
+        .pack-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .pack-card.selected-pack {
+            border: 3px solid #ff007f;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .pack-art-container {
+            height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 65px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .pack-name {
+            font-family: 'Fredoka One', cursive;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .pack-cost {
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* True Blook Grid Box Component */
+        .blook-box {
+            width: 125px;
+            background: #1c1f30;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border-bottom: 4px solid #11131f;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .blook-art {
+            font-size: 45px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        .blook-label {
+            font-weight: 800;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .blook-qty {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: #3b82f6;
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 20px;
+        }
+
+        /* Accurate Blooket Rarity Badges */
+        .rarity-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+        .common { background: #858585; color: white; }
+        .uncommon { background: #4ca64c; color: white; }
+        .rare { background: #00bcff; color: white; }
+        .epic { background: #a020f0; color: white; }
+        .legendary { background: #ffaa00; color: white; }
+        .chroma { background: linear-gradient(45deg, #ff007f, #7700cc, #00bcff); color: white; animation: rainbowPulse 2s infinite alternate; }
+
+        @keyframes rainbowPulse {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(180deg); }
+        }
+
+        /* Immersive Box Opening Animation Overlay Screen */
+        #unboxing-theater {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 13, 23, 0.95);
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+
+        .unbox-spinner-box {
+            width: 240px;
+            height: 280px;
+            background: #1c1f30;
+            border-radius: 24px;
+            border-bottom: 8px solid #0f111a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .spin-active-blook {
+            font-size: 90px;
+            animation: spinPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes spinPop {
+            0% { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Header controls */
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #1c1f30;
+            padding: 15px 20px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #11131f;
+        }
+
+        /* Access Form Splash Panels */
         #auth-screen { 
             position: fixed; inset: 0; 
-            background: radial-gradient(circle at center, #250040 0%, #05000d 100%); 
-            z-index: 100; display: flex; flex-direction: column; 
+            background: radial-gradient(circle at center, #2e1e59 0%, #0c081d 100%); 
+            z-index: 1000; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; gap: 20px; 
         }
         #auth-screen h1 {
-            font-size: 48px; color: #ffcc00;
-            text-shadow: 0 8px 20px rgba(255, 204, 0, 0.4);
-            letter-spacing: 2px; animation: bounce 2s infinite alternate;
-        }
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-8px); }
+            font-family: 'Fredoka One', cursive;
+            font-size: 55px; color: #ffffff;
+            text-shadow: 0 6px 0 #1c123a;
         }
 
-        input { 
-            padding: 16px 24px; border-radius: 14px; border: 2px solid rgba(255, 255, 255, 0.1); 
-            background: rgba(255, 255, 255, 0.06); color: white;
-            font-size: 16px; font-weight: 700; outline: none; width: 300px; text-align: center;
+        input[type="text"], input[type="number"] { 
+            padding: 14px 20px; border-radius: 10px; border: none; 
+            background: #1c123a; color: white; font-size: 16px; 
+            font-weight: 700; width: 280px; text-align: center;
+            border-bottom: 4px solid #0c081d; outline: none;
         }
-        input:focus { border-color: #ff007f; box-shadow: 0 0 15px rgba(255, 0, 127, 0.3); }
+        input:focus { border-color: #3b82f6; }
 
-        .btn-play { 
-            background: linear-gradient(135deg, #ff007f 0%, #7700cc 100%); 
-            color: white; border: none; font-weight: 900; 
-            font-family: 'Fredoka One', cursive; letter-spacing: 1px;
-            padding: 14px 30px; border-radius: 14px; cursor: pointer; 
-            box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4);
+        .btn-action { 
+            background: #3b82f6; color: white; border: none; 
+            font-family: 'Fredoka One', cursive; font-size: 18px;
+            padding: 12px 28px; border-radius: 10px; cursor: pointer; 
+            border-bottom: 4px solid #1d4ed8;
         }
-        .btn-play:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6); }
+        .btn-action:hover { transform: translateY(-2px); border-bottom-width: 5px; }
+        .btn-action:active { transform: translateY(1px); border-bottom-width: 2px; }
 
-        /* Auto Switch Feature UI Toggle Component */
-        .toggle-container {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.05); width: fit-content;
-            padding: 10px 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1);
+        /* Custom Toggle Switch Switch Component */
+        .toggle-label { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .checkbox-custom { width: 22px; height: 22px; background: #0f111a; border-radius: 6px; display: inline-block; position: relative; border-bottom: 2px solid #000; }
+        input[type="checkbox"] { display: none; }
+        input[type="checkbox"]:checked + .checkbox-custom::after {
+            content: "✓"; position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; color: #3b82f6; font-weight: 900; font-size: 16px;
         }
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; inset: 0; background-color: #444;
-            transition: .3s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px;
-            left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%;
-        }
-        input:checked + .slider { background-color: #ff007f; }
-        input:checked + .slider:before { transform: translateX(24px); }
 
-        /* Cards Layout */
-        .card-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 25px; padding-bottom: 20px; }
-        .pack-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08); padding: 25px;
-            border-radius: 20px; text-align: center; width: 220px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        .pack-card:hover { transform: translateY(-5px); border-color: #ffcc00; }
-
-        .blook-card { 
-            background: rgba(255, 255, 255, 0.04); border: 2px solid rgba(255, 255, 255, 0.08); 
-            padding: 20px; border-radius: 18px; text-align: center; width: 150px; 
-            font-weight: 900; font-size: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .blook-avatar { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); }
+        /* Chat layout */
+        #chat-box { height: 65vh; background: #121420; border-radius: 14px; padding: 20px; overflow-y: auto; margin-bottom: 15px; border-bottom: 4px solid #090a10; }
+        .message-row { margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 10px 14px; border-radius: 8px; border-left: 4px solid #3b82f6; }
+        .msg-user { font-family: 'Fredoka One', cursive; font-size: 14px; margin-bottom: 2px; color: #a3b8cc; }
         
-        /* Rarity styling categories */
-        .rarity { font-size: 11px; text-transform: uppercase; font-weight: 900; padding: 3px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
-        .common { background: #5e5e5e; color: white; }
-        .rare { background: #00bcff; color: white; }
-        .epic { background: #a020f0; color: white; }
-        .legendary { background: #ffaa00; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-        .chroma { background: linear-gradient(90deg, #ff007f, #7700cc, #00bcff); color: white; animation: rainbow 2s infinite linear; }
+        /* Drop Log History List Module */
+        #history-log { background: #090a10; border-radius: 12px; padding: 15px; max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #a3b8cc; border: 1px solid rgba(255,255,255,0.03); }
 
-        @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
-        #chat-box { height: 70%; border: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 20px; margin-bottom: 15px; border-radius: 16px; background: rgba(0, 0, 0, 0.2); }
-        .chat-line { margin-bottom: 10px; font-size: 15px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; width: fit-content; }
-        .owner-tag { color: #ff007f; font-weight: 900; }
-        #admin-panel { border: 2px dashed #ff0055; background: rgba(255, 0, 85, 0.05); margin-top: 30px; padding: 20px; border-radius: 18px; display: none; }
-        
-        /* Fast Unbox Popup Log Alert Panel */
-        #log-panel { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; margin-top: 25px; max-height: 180px; overflow-y: auto; font-family: monospace; border: 1px solid rgba(255,255,255,0.05); }
+        /* Admin Layout Control Dashboard Screen */
+        #admin-panel { border: 2px dashed #ef4444; background: rgba(239, 68, 68, 0.05); padding: 20px; border-radius: 16px; margin-top: 30px; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Access Gateway Form Area -->
+    <!-- Overlay Unboxing Core Sequence Screen Animation Screen Container -->
+    <div id="unboxing-theater">
+        <div class="unbox-spinner-box">
+            <div id="theater-avatar" class="spin-active-blook">❓</div>
+            <div id="theater-name" style="font-family:'Fredoka One'; font-size:22px; margin-top:15px;">Opening...</div>
+            <div id="theater-rarity" class="rarity-tag common">Common</div>
+        </div>
+        <p style="color:#717694; font-weight:700; margin-top:20px; font-size:14px;">Click anywhere to skip animation</p>
+    </div>
+
+    <!-- Login Authentication Gateway -->
     <div id="auth-screen">
-        <h1>BLOOK LABS V3</h1>
-        <p style="color: #b399ff; font-weight: 700;">Deluxe Edition With Automated Box Opening</p>
-        <input type="text" id="username-in" placeholder="Enter Cool Username...">
-        <button class="btn-play" onclick="auth()">ENTER LOBBY</button>
+        <h1>Blooket Labs Deluxe</h1>
+        <p style="color: #8c81b5; font-weight: 700; margin-top: -10px;">High-Detail Custom Server Emulator</p>
+        <input type="text" id="username-in" placeholder="Enter Account Username">
+        <button class="btn-action" onclick="auth()">LOG IN / SIGN UP</button>
     </div>
 
-    <!-- Navigation Controller Panels -->
+    <!-- Sidebar Master Layout Component -->
     <div id="sidebar">
-        <h2 id="user-display">GIO 👑</h2>
-        <div class="coin-widget">🪙 <span id="coin-count">100</span></div>
-        <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Market Packs</button>
-        <button class="nav-btn" id="btn-blooks" onclick="setView('blooks')">🎒 My Collection</button>
-        <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Reward Wheel</button>
-        <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Global Live Chat</button>
+        <div class="brand-header">Blooket Labs</div>
+        <div class="profile-card">
+            <div id="user-display">GIO</div>
+            <div style="font-size:12px; color:#8c81b5; font-weight:700; margin-top:3px;">Account Dashboard</div>
+        </div>
+        <div class="coin-widget">🪙 <span id="coin-count">150</span></div>
+        
+        <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Market Boxes</button>
+        <button class="nav-btn" id="btn-blooks" onclick="setView('blooks')">🎒 My Blooks</button>
+        <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Daily Wheel</button>
+        <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Live Chat</button>
     </div>
 
-    <!-- Content Workspace -->
+    <!-- Workspace Window Management Panels -->
     <div id="main-content">
-        <!-- Market Section Framework -->
+        
+        <!-- Box Market Window View View Layout -->
         <div id="market" class="window active">
-            <h1 style="color: #ffcc00; font-size: 32px;">Blook Market</h1>
-            <p style="color: #b399ff; margin-bottom: 20px;">Exchange your earned tokens for mystery pack pulls!</p>
+            <div class="section-title" style="color:#ffcc00;">Marketplace</div>
+            <div class="section-desc">Unlock premium items by crack-opening limited mystery loot tier storage units.</div>
             
-            <!-- Automate Switch Configuration Toggle Checkbox Box -->
-            <div class="toggle-container">
-                <span style="font-weight: 700; color: #ff007f;">⚡ Auto-Open Enabled:</span>
-                <label class="switch">
-                    <input type="checkbox" id="auto-open-toggle" onchange="toggleAutoOpen()">
-                    <span class="slider"></span>
+            <div class="controls-row">
+                <label class="toggle-label">
+                    <input type="checkbox" id="auto-switch" onchange="toggleAutoLoop()">
+                    <span class="checkbox-custom"></span>
+                    ⚡ Rapid Auto-Open
                 </label>
+                <div style="color:#717694; font-weight:700; font-size:14px;">(Select a pack crate box item below to lock focus cycle)</div>
             </div>
 
-            <div class="card-grid" id="packs-container"></div>
-            <div id="log-panel" style="display:none;"><div style="color:#ffcc00; font-weight:bold; margin-bottom:5px;">📋 Drop History Feed:</div><div id="log-content"></div></div>
+            <div class="card-grid" id="packs-mount"></div>
+            <div id="history-log" style="display:none;"><div style="font-weight:bold; color:orange; margin-bottom:5px;">📋 Server Live Drop Feed Log:</div><div id="history-feed"></div></div>
         </div>
 
-        <!-- Inventory List -->
+        <!-- Inventory List View Layout Pane -->
         <div id="blooks" class="window">
-            <h1 style="color: #ff007f; font-size: 32px;">My Blooks</h1>
-            <p style="color: #b399ff;">View all rare and premium tier styles gathered.</p>
-            <div class="card-grid" id="blooks-container"></div>
+            <div class="section-title" style="color:#3b82f6;">My Blook Vault</div>
+            <div class="section-desc">Browse collected styles and clear inventory boxes of duplicates for extra funding tokens.</div>
+            
+            <div class="controls-row" style="justify-content: space-between;">
+                <div style="font-weight:800; font-size:16px;">Quick Liquidation Management Console</div>
+                <button class="btn-action" style="background:#ef4444; border-color:#b91c1c; font-size:14px; padding:10px 20px;" onclick="sellAllDuplicates()">💥 Sell All Duplicate Items (<span id="dup-value-label">0</span> Token Value)</button>
+            </div>
+
+            <div class="card-grid" id="blooks-mount"></div>
         </div>
 
-        <!-- Hourly Claim Wheel -->
-        <div id="wheel" class="window" style="text-align: center;">
-            <h1 style="color: #00bcff; font-size: 32px; margin-bottom: 10px;">Hourly Cash Bonus</h1>
-            <p style="color: #b399ff; margin-bottom: 40px;">Claim completely free coin tokens instantly every single hour!</p>
-            <div style="font-size: 100px; margin-bottom: 20px; animation: bounce 3s infinite alternate;">🎡</div>
-            <button class="btn-play" onclick="spinWheel()" style="padding: 20px 50px; font-size: 22px;">SPIN THE WHEEL</button>
+        <!-- Coin Grant Wheel Pane Layout -->
+        <div id="wheel" class="window" style="text-align:center; padding-top:40px;">
+            <div class="section-title" style="color:#10b981;">Hourly Multiplier Wheel</div>
+            <div class="section-desc">Claim free financial funding cash provisions natively straight onto your character profile matrix.</div>
+            <div style="font-size:130px; margin:30px 0; animation: bounce 3s infinite alternate;">🎡</div>
+            <button class="btn-action" style="background:#10b981; border-color:#047857; padding:18px 45px; font-size:22px;" onclick="spinBonusWheel()">SPIN FOR TOKENS</button>
         </div>
 
-        <!-- Global Chat Simulation Engine -->
+        <!-- Chat Frame Layer UI Layout Panel Container -->
         <div id="chat" class="window">
-            <h1 style="color: #00cc66; font-size: 32px; margin-bottom: 5px;">Lobby Chat</h1>
+            <div class="section-title" style="color:#a855f7;">Lobby Chat Space</div>
+            <div class="section-desc">Interact inside our simulated real-time player chat stream channel engine logs.</div>
             <div id="chat-box"></div>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="chat-msg" style="width:75%;" placeholder="Type a funny message here...">
-                <button class="btn-play" onclick="sendChat()">Send</button>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="chat-msg" style="flex:1; text-align:left;" placeholder="Type message onto global message line router...">
+                <button class="btn-action" onclick="submitUserChat()">SEND</button>
             </div>
         </div>
 
-        <!-- Secret System Admin Hub Panel -->
+        <!-- Master Owner Controller System Panel UI Node -->
         <div id="admin-panel">
-            <h2 style="color:#ff0055; margin-bottom: 10px;">👑 Owner Admin Command Console</h2>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <input type="text" id="adm-blook" placeholder="Blook Name" style="width: 200px;">
-                <input type="number" id="adm-coins" placeholder="Coins Amount" style="width: 200px;">
-                <button class="btn-play" onclick="runAdmin()" style="background: #ff0055;">INJECT ASSETS</button>
+            <h3 style="color:#ef4444; font-family:'Fredoka One'; margin-bottom:10px;">👑 Gio's Master Account Override Vault Control Console</h3>
+            <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                <input type="text" id="adm-blook-name" placeholder="Target Blook Name Label String">
+                <input type="number" id="adm-coin-amt" placeholder="Inject Token Currency Count">
+                <button class="btn-action" style="background:#ef4444; border-color:#991b1b;" onclick="triggerAdminOverride()">INJECT SPECIFIED CODE COIN DATA</button>
             </div>
         </div>
+
     </div>
 
     <script>
-        // Database Expansion Configuration including 6 distinct categories
-        const BLOOK_DETAILS = {
-            // Medieval Pack
-            'Knight': { emoji: '⚔️', rarity: 'common' },
-            'Queen': { emoji: '👸', rarity: 'rare' },
-            'King': { emoji: '👑', rarity: 'rare' },
-            'Wizard': { emoji: '🧙', rarity: 'epic' },
-            'Dragon': { emoji: '🐉', rarity: 'legendary' },
-            // Space Pack
-            'Meteor': { emoji: '☄️', rarity: 'common' },
-            'Astronaut': { emoji: '👨‍🚀', rarity: 'rare' },
-            'Alien': { emoji: '👽', rarity: 'rare' },
-            'UFO': { emoji: '🛸', rarity: 'epic' },
-            'Star': { emoji: '⭐', rarity: 'legendary' },
-            // Anime Pack
-            'Ninja': { emoji: '🥷', rarity: 'common' },
-            'Samurai': { emoji: '👺', rarity: 'rare' },
-            'Mech Robot': { emoji: '🤖', rarity: 'epic' },
-            'Titan Creature': { emoji: '👹', rarity: 'legendary' },
-            // Cyber Cyberpunk Pack
-            'Hacker Cat': { emoji: '🐱‍💻', rarity: 'rare' },
-            'Cyborg': { emoji: '🦿', rarity: 'epic' },
-            'AI Matrix': { emoji: '💾', rarity: 'epic' },
-            'Cyber Core': { emoji: '🔮', rarity: 'legendary' },
-            // Safari Pack
-            'Monkey': { emoji: '🐒', rarity: 'common' },
-            'Zebra': { emoji: '🦓', rarity: 'rare' },
-            'Lion': { emoji: '🦁', rarity: 'epic' },
-            'Elephant': { emoji: '🐘', rarity: 'legendary' },
-            // Chroma Master Pack Tier
-            'Rainbow Slime': { emoji: '🌈', rarity: 'chroma' },
-            'Neon Cat': { emoji: '🐱', rarity: 'chroma' },
-            'Glitch Blob': { emoji: '👾', rarity: 'chroma' },
-            'Void Overlord': { emoji: '🧿', rarity: 'chroma' }
+        // Official Blook Database Matrix Layout Configuration Schema
+        const BLOOK_CONFIG = {
+            // Medieval Pack Crate Unit
+            'Knight': { emoji: '⚔️', rarity: 'common', value: 5 },
+            'Elf': { emoji: '🧝', rarity: 'uncommon', value: 8 },
+            'Witch': { emoji: '🧙‍♀️', rarity: 'rare', value: 20 },
+            'Wizard': { emoji: '🧙', rarity: 'epic', value: 75 },
+            'King': { emoji: '👑', rarity: 'legendary', value: 200 },
+            'Lord Dragon': { emoji: '🐉', rarity: 'chroma', value: 300 },
+            // Space Pack Crate Unit
+            'Meteor': { emoji: '☄️', rarity: 'common', value: 5 },
+            'Rover': { emoji: '🚜', rarity: 'uncommon', value: 8 },
+            'Astronaut': { emoji: '👨‍🚀', rarity: 'rare', value: 20 },
+            'Alien UFO': { emoji: '🛸', rarity: 'epic', value: 75 },
+            'Nova Star': { emoji: '⭐', rarity: 'legendary', value: 200 },
+            // Cyberpunk Pack Crate Unit
+            'Data Disc': { emoji: '💾', rarity: 'uncommon', value: 8 },
+            'Derezzed Cat': { emoji: '🐱‍💻', rarity: 'rare', value: 20 },
+            'Cyborg Runner': { emoji: '🦿', rarity: 'epic', value: 75 },
+            'AI Net Core': { emoji: '🔮', rarity: 'legendary', value: 250 },
+            'Glitch Matrix': { emoji: '👾', rarity: 'chroma', value: 500 },
+            // Anime Pack Crate Unit
+            'Chibi Ninja': { emoji: '🥷', rarity: 'common', value: 5 },
+            'Katana Samurai': { emoji: '👺', rarity: 'rare', value: 25 },
+            'Gundam Mech': { emoji: '🤖', rarity: 'epic', value: 80 },
+            'Demon Overlord': { emoji: '👹', rarity: 'legendary', value: 220 }
         };
 
-        const PACKS = {
-            Medieval: { cost: 20, blooks: ['Knight', 'King', 'Queen', 'Wizard', 'Dragon'] },
-            Space: { cost: 35, blooks: ['Meteor', 'Astronaut', 'Alien', 'UFO', 'Star'] },
-            Anime: { cost: 50, blooks: ['Ninja', 'Samurai', 'Mech Robot', 'Titan Creature'] },
-            Cyberpunk: { cost: 65, blooks: ['Hacker Cat', 'Cyborg', 'AI Matrix', 'Cyber Core'] },
-            Safari: { cost: 80, blooks: ['Monkey', 'Zebra', 'Lion', 'Elephant'] },
-            Chroma: { cost: 200, blooks: ['Rainbow Slime', 'Neon Cat', 'Glitch Blob', 'Void Overlord'] }
+        const BOX_PACKS = {
+            Medieval: { cost: 15, art: '🏰', items: ['Knight', 'Elf', 'Witch', 'Wizard', 'King', 'Lord Dragon'], rates: [0.50, 0.30, 0.14, 0.045, 0.012, 0.003] },
+            Space: { cost: 25, art: '🚀', items: ['Meteor', 'Rover', 'Astronaut', 'Alien UFO', 'Nova Star'], rates: [0.52, 0.30, 0.13, 0.04, 0.01] },
+            Anime: { cost: 40, art: '🌸', items: ['Chibi Ninja', 'Katana Samurai', 'Gundam Mech', 'Demon Overlord'], rates: [0.60, 0.26, 0.11, 0.03] },
+            Cyberpunk: { cost: 60, art: '🌐', items: ['Data Disc', 'Derezzed Cat', 'Cyborg Runner', 'AI Net Core', 'Glitch Matrix'], rates: [0.55, 0.28, 0.12, 0.045, 0.005] }
         };
 
-        let currentUser = { username: "", coins: 200, blooks: [], lastWheel: 0, isAdmin: false };
-        let autoOpenInterval = null;
-        let activePackTarget = null;
+        let activeUser = { username: "", coins: 150, blooks: {}, lastBonus: 0, isAdmin: false };
+        let autoLoopTimer = null;
+        let selectedCrateFocus = null;
 
-        const botMessages = ["Who wants to trade an Elephant?", "Just pulled a Neon Cat!! OMG", "Gio this auto clicker is awesome", "Leaving auto-open on all night long", "Check out my safari inventory"];
+        const chatTemplates = ["Anyone found the Lord Dragon yet?", "Auto clicker loop is making me bank", "Gio your game build is elite level", "Just liquidated my duplicate items for 500 profit tokens", "Chroma drops are super rare!"];
 
         function auth() {
             const name = document.getElementById('username-in').value.trim();
-            if (!name) return alert("Please type a cool username first!");
+            if(!name) return alert("Please supply a functional profile account name identifier tag.");
 
-            const savedData = localStorage.getItem('blook_user_v3_' + name.toLowerCase());
-            if (savedData) {
-                currentUser = JSON.parse(savedData);
+            const storageKey = 'blooket_deluxe_v1_' + name.toLowerCase();
+            const cache = localStorage.getItem(storageKey);
+
+            if(cache) {
+                activeUser = JSON.parse(cache);
             } else {
-                currentUser.username = name;
-                currentUser.isAdmin = (name.toLowerCase() === 'gio');
-                localStorage.setItem('blook_user_v3_' + name.toLowerCase(), JSON.stringify(currentUser));
+                activeUser.username = name;
+                activeUser.coins = 200;
+                activeUser.blooks = {};
+                activeUser.isAdmin = (name.toLowerCase() === 'gio');
             }
 
-            document.getElementById('auth-screen').style.opacity = 0;
-            setTimeout(() => {
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('sidebar').style.display = 'flex';
-                document.getElementById('main-content').style.display = 'block';
-                if (currentUser.isAdmin) document.getElementById('admin-panel').style.display = 'block';
-            }, 200);
+            // Unveil primary user interface layers components
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'block';
 
-            updateUI();
-            renderPacks();
-            startChatBot();
+            if(activeUser.isAdmin) document.getElementById('admin-panel').style.display = 'block';
+
+            syncEngineState();
+            renderMarketCrates();
+            bootChatScheduler();
+            
+            // Set up animation dismiss tap click intercept target triggers
+            document.getElementById('unboxing-theater').onclick = () => {
+                document.getElementById('unboxing-theater').style.display = 'none';
+            };
         }
 
-        function updateUI() {
-            document.getElementById('user-display').innerHTML = currentUser.username + (currentUser.isAdmin ? ' <span style="color:#ff007f">👑</span>' : '');
-            document.getElementById('coin-count').innerText = currentUser.coins;
+        function syncEngineState() {
+            document.getElementById('user-display').innerHTML = activeUser.username + (activeUser.isAdmin ? ' <span style="color:#ff007f">👑</span>' : '');
+            document.getElementById('coin-count').innerText = activeUser.coins;
             
-            const inv = document.getElementById('blooks-container');
-            inv.innerHTML = '';
-            
-            if(currentUser.blooks.length === 0) {
-                inv.innerHTML = `<p style="color: rgba(255,255,255,0.4); font-style: italic;">Empty collection inventory storage box logs.</p>`;
+            // Refresh Inventory Vault Node Element Tree
+            const mount = document.getElementById('blooks-mount');
+            mount.innerHTML = '';
+
+            let duplicatePoolValue = 0;
+            let totalItemEntriesCount = 0;
+
+            for(let key in activeUser.blooks) {
+                const count = activeUser.blooks[key];
+                if(count <= 0) continue;
+                totalItemEntriesCount++;
+
+                const meta = BLOOK_CONFIG[key] || { emoji: '📦', rarity: 'common', value: 2 };
+                if(count > 1) {
+                    duplicatePoolValue += (count - 1) * meta.value;
+                }
+
+                mount.innerHTML += `
+                    <div class="blook-box">
+                        <div class="blook-qty">x${count}</div>
+                        <div class="blook-art">${meta.emoji}</div>
+                        <div class="blook-label">${key}</div>
+                        <div class="rarity-tag ${meta.rarity}">${meta.rarity}</div>
+                        <div style="font-size:11px; margin-top:5px; color:#ffd700; font-weight:800;">🪙 Value: ${meta.value}</div>
+                    </div>`;
             }
 
-            currentUser.blooks.forEach(b => {
-                const item = BLOOK_DETAILS[b] || { emoji: '📦', rarity: 'common' };
-                inv.innerHTML += `
-                    <div class="blook-card">
-                        <div class="blook-avatar">${item.emoji}</div>
-                        <div style="font-size:14px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${b}</div>
-                        <span class="rarity ${item.rarity}">${item.rarity}</span>
-                    </div>`;
-            });
-            localStorage.setItem('blook_user_v3_' + currentUser.username.toLowerCase(), JSON.stringify(currentUser));
+            if(totalItemEntriesCount === 0) {
+                mount.innerHTML = `<p style="color:#717694; font-style:italic;">No custom items gathered inside profile storage box banks yet.</p>`;
+            }
+
+            document.getElementById('dup-value-label').innerText = duplicatePoolValue;
+            localStorage.setItem('blooket_deluxe_v1_' + activeUser.username.toLowerCase(), JSON.stringify(activeUser));
         }
 
         function setView(id) {
@@ -353,126 +576,83 @@
             document.getElementById('btn-' + id).classList.add('active-btn');
         }
 
-        function renderPacks() {
-            const container = document.getElementById('packs-container');
-            container.innerHTML = '';
-            for (let name in PACKS) {
-                container.innerHTML += `
-                    <div class="pack-card" id="pack-node-${name}">
-                        <h3 style="font-size: 20px; margin-bottom: 5px;">${name} Pack</h3>
-                        <p style="color:#ffd700; font-weight:900; margin-bottom: 15px; font-size:16px;">🪙 ${PACKS[name].cost}</p>
-                        <button class="btn-play" style="font-size:12px; padding: 10px 15px;" onclick="handlePackTrigger('${name}')">OPEN</button>
+        function renderMarketCrates() {
+            const mount = document.getElementById('packs-mount');
+            mount.innerHTML = '';
+            for(let name in BOX_PACKS) {
+                mount.innerHTML += `
+                    <div class="pack-card" id="crate-dom-${name}" onclick="bindCrateTarget('${name}')">
+                        <div class="pack-art-container">${BOX_PACKS[name].art}</div>
+                        <div class="pack-name">${name} Box</div>
+                        <div class="pack-cost">🪙 ${BOX_PACKS[name].cost} Tokens</div>
                     </div>`;
             }
         }
 
-        function handlePackTrigger(name) {
-            const isAuto = document.getElementById('auto-open-toggle').checked;
+        function bindCrateTarget(name) {
+            const isAuto = document.getElementById('auto-switch').checked;
             if(isAuto) {
-                // Clear any active pack highlighted style indicators
-                document.querySelectorAll('.pack-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.08)');
-                activePackTarget = name;
-                document.getElementById(`pack-node-${name}`).style.borderColor = '#ff007f';
-                document.getElementById('log-panel').style.display = 'block';
+                document.querySelectorAll('.pack-card').forEach(c => c.classList.remove('selected-pack'));
+                selectedCrateFocus = name;
+                document.getElementById(`crate-dom-${name}`).classList.add('selected-pack');
+                document.getElementById('history-log').style.display = 'block';
             } else {
-                openPackSingle(name);
+                triggerUnboxCoreSequence(name, false);
             }
         }
 
-        function openPackSingle(name) {
-            const pack = PACKS[name];
-            if (currentUser.coins < pack.cost) return alert('Not enough tokens!');
+        function triggerUnboxCoreSequence(name, skipCinemaAnimation) {
+            const config = BOX_PACKS[name];
+            if(activeUser.coins < config.cost) {
+                if(skipCinemaAnimation) {
+                    pushLogFeed(`❌ Token allocation failure during cycle unboxing of ${name} Box pack unit.`);
+                    document.getElementById('auto-switch').checked = false;
+                    toggleAutoLoop();
+                } else {
+                    alert("Insufficient asset currency funding tokens.");
+                }
+                return;
+            }
+
+            activeUser.coins -= config.cost;
             
-            currentUser.coins -= pack.cost;
-            const rewardBlook = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
-            currentUser.blooks.push(rewardBlook);
-            
-            updateUI();
-            alert(`🎉 UNBOXED: ${rewardBlook}!`);
+            // Execute Random Weighted Percentages Array Algorithm Calculations
+            const rand = Math.random();
+            let accumulatedChanceSum = 0;
+            let rewardedItemStringLabel = config.items[0];
+
+            for(let i = 0; i < config.rates.length; i++) {
+                accumulatedChanceSum += config.rates[i];
+                if(rand <= accumulatedChanceSum) {
+                    rewardedItemStringLabel = config.items[i];
+                    break;
+                }
+            }
+
+            activeUser.blooks[rewardedItemStringLabel] = (activeUser.blooks[rewardedItemStringLabel] || 0) + 1;
+            const meta = BLOOK_CONFIG[rewardedItemStringLabel] || { emoji: '❓', rarity: 'common' };
+
+            if(skipCinemaAnimation) {
+                pushLogFeed(`Opened <span style="font-weight:bold; color:white;">${name} Box</span> → Pull Awarded: <span class="${meta.rarity}" style="font-weight:bold; padding:1px 4px; border-radius:3px;">${rewardedItemStringLabel}</span>`);
+                syncEngineState();
+            } else {
+                // Populate Cinematic Overlay Stage Panels Elements
+                document.getElementById('theater-avatar').innerText = meta.emoji;
+                document.getElementById('theater-name').innerText = rewardedItemStringLabel;
+                document.getElementById('theater-rarity').innerText = meta.rarity;
+                document.getElementById('theater-rarity').className = `rarity-tag ${meta.rarity}`;
+                document.getElementById('unboxing-theater').style.display = 'flex';
+                syncEngineState();
+            }
         }
 
-        function toggleAutoOpen() {
-            const isChecked = document.getElementById('auto-open-toggle').checked;
+        function toggleAutoLoop() {
+            const isChecked = document.getElementById('auto-switch').checked;
             if(isChecked) {
-                document.getElementById('log-content').innerHTML = `<i>Click an OPEN button on a pack above to lock auto-opening loop...</i>`;
-                document.getElementById('log-panel').style.display = 'block';
+                document.getElementById('history-feed').innerHTML = `<i>Awaiting selection input context lock targets from market items above...</i>`;
+                document.getElementById('history-log').style.display = 'block';
                 
-                autoOpenInterval = setInterval(() => {
-                    if(!activePackTarget) return;
-                    const pack = PACKS[activePackTarget];
-                    if(currentUser.coins < pack.cost) {
-                        logFeed(`❌ Out of coins! Stopped unboxing.`);
-                        document.getElementById('auto-open-toggle').checked = false;
-                        toggleAutoOpen();
-                        return;
-                    }
-                    currentUser.coins -= pack.cost;
-                    const reward = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
-                    currentUser.blooks.push(reward);
-                    
-                    const meta = BLOOK_DETAILS[reward] || { rarity: 'common' };
-                    logFeed(`Pulled a <span style="text-transform:uppercase; font-weight:bold;" class="${meta.rarity}">${reward}</span> from the ${activePackTarget} box.`);
-                    updateUI();
-                }, 250); // Unboxes 4 packs every second
-            } else {
-                clearInterval(autoOpenInterval);
-                activePackTarget = null;
-                document.querySelectorAll('.pack-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.08)');
-            }
-        }
-
-        function logFeed(text) {
-            const el = document.getElementById('log-content');
-            el.innerHTML = `<div>${text}</div>` + el.innerHTML;
-        }
-        
-        function spinWheel() {
-            const now = Date.now();
-            if (now - currentUser.lastWheel < 3600000) {
-                const remaining = Math.ceil((3600000 - (now - currentUser.lastWheel)) / 60000);
-                return alert(`Wheel cooling down! Wait ${remaining} minutes.`);
-            }
-            const reward = Math.floor(Math.random() * 200) + 100;
-            currentUser.coins += reward;
-            currentUser.lastWheel = now;
-            updateUI();
-            alert(`💰 Success! You scored +${reward} tokens!`);
-        }
-
-        function sendChat() {
-            const inp = document.getElementById('chat-msg');
-            if (!inp.value.trim()) return;
-            let nameDisplay = currentUser.username;
-            if(currentUser.isAdmin) nameDisplay = `<span class="owner-tag">[👑 OWNER] GIO</span>`;
-            addChatMessage(nameDisplay, inp.value.trim());
-            inp.value = '';
-        }
-
-        function addChatMessage(user, text) {
-            const box = document.getElementById('chat-box');
-            box.innerHTML += `<div class="chat-line"><b>${user}:</b> ${text}</div>`;
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function startChatBot() {
-            setInterval(() => {
-                const randomUser = "Player_" + Math.floor(Math.random() * 800 + 100);
-                const randomText = botMessages[Math.floor(Math.random() * botMessages.length)];
-                addChatMessage(randomUser, randomText);
-            }, 6000);
-        }
-
-        function runAdmin() {
-            const blookName = document.getElementById('adm-blook').value.trim();
-            const coinAmt = document.getElementById('adm-coins').value;
-            if (blookName) {
-                if(!BLOOK_DETAILS[blookName]) BLOOK_DETAILS[blookName] = { emoji: '👑', rarity: 'chroma' };
-                currentUser.blooks.push(blookName);
-            }
-            if (coinAmt) currentUser.coins += parseInt(coinAmt);
-            updateUI();
-            alert("Admin assets injected!");
-        }
-    </script>
-</body>
-</html>
+                autoLoopTimer = setInterval(() => {
+                    if(!selectedCrateFocus) return;
+                    triggerUnboxCoreSequence(selectedCrateFocus, true);
+                }, 180);
