@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blook Knockoff Dashboard</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        * { box-sizing: border-box; font-family: 'Comic Sans MS', sans-serif; margin: 0; padding: 0; }
+        body { display: flex; background: #f0f0f0; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar Styling */
+        #sidebar { width: 250px; background: #3a0066; color: white; display: flex; flex-direction: column; padding: 20px; gap: 15px; }
+        #sidebar h2 { text-align: center; color: #ffcc00; margin-bottom: 20px; }
+        .nav-btn { background: #560099; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; text-align: left; font-size: 16px; font-weight: bold; }
+        .nav-btn:hover { background: #7700cc; }
+        
+        /* App Windows */
+        #main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; }
+        .window { display: none; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 0 #ddd; height: 100%; }
+        .active { display: block; }
+        
+        /* Custom Auth Screen Overlay */
+        #auth-screen { position: fixed; inset: 0; background: #3a0066; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; color: white; }
+        input, button { padding: 12px; border-radius: 8px; border: 2px solid #3a0066; font-size: 16px; }
+        .btn-play { background: #ffcc00; color: #3a0066; border: none; font-weight: bold; cursor: pointer; }
+
+        /* Component Styling */
+        .card-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
+        .item-card { background: #f9f9f9; border: 3px solid #3a0066; padding: 15px; border-radius: 12px; text-align: center; width: 140px; font-weight: bold; position: relative; }
+        #chat-box { height: 70%; border: 2px solid #ccc; overflow-y: scroll; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        #admin-panel { border: 4px dashed red; background: #fff0f0; margin-top: 20px; padding: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Auth Splash Screen -->
+    <div id="auth-screen">
+        <h1>Blooket Knockoff 🎉</h1>
+        <input type="text" id="username-in" placeholder="Username...">
+        <div>
+            <button class="btn-play" onclick="auth('login')">Log In</button>
+            <button class="btn-play" onclick="auth('signup')" style="background:#00cc66; color:white;">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- Navigation Sidebar -->
+    <div id="sidebar">
+        <h2 id="user-display">Loading...</h2>
+        <div style="background: #220044; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; color: #ffcc00;">
+            🪙 Coins: <span id="coin-count">0</span>
+        </div>
+        <button class="nav-btn" onclick="setView('market')">🛒 Market Packs</button>
+        <button class="nav-btn" onclick="setView('blooks')">🎒 My Blooks</button>
+        <button class="nav-btn" onclick="setView('wheel')">🎡 Daily Wheel</button>
+        <button class="nav-btn" onclick="setView('trading')">🤝 Global Trade</button>
+        <button class="nav-btn" onclick="setView('chat')">💬 Global Chat</button>
+    </div>
+
+    <!-- View Windows -->
+    <div id="main-content">
+        <!-- Market Window -->
+        <div id="market" class="window active">
+            <h1>Blook Market</h1>
+            <div class="card-grid" id="packs-container"></div>
+        </div>
+
+        <!-- Blooks Window -->
+        <div id="blooks" class="window">
+            <h1>My Collection</h1>
+            <div class="card-grid" id="blooks-container"></div>
+        </div>
+
+        <!-- Reward Wheel Window -->
+        <div id="wheel" class="window">
+            <h1>Hourly Coin Wheel</h1>
+            <p style="margin: 15px 0;">Spin every hour for free cash updates!</p>
+            <button class="btn-play" onclick="spinWheel()" style="padding:20px; font-size:24px;">SPIN WHEEL 🎡</button>
+        </div>
+
+        <!-- Trading Window -->
+        <div id="trading" class="window">
+            <h1>Global Trade Station</h1>
+            <input type="text" id="trade-blook-input" placeholder="Blook name to offer...">
+            <button class="btn-play" onclick="postTrade()">Post Trade Offer</button>
+            <h3 style="margin-top:20px;">Active Public Board Offers:</h3>
+            <div id="trades-list" style="margin-top:10px;"></div>
+        </div>
+
+        <!-- Chat Window -->
+        <div id="chat" class="window">
+            <h1>Global Direct Chat Room</h1>
+            <div id="chat-box"></div>
+            <input type="text" id="chat-msg" style="width: 70%;" placeholder="Say something funny...">
+            <button class="btn-play" onclick="sendChat()">Send</button>
+        </div>
+
+        <!-- Hidden Admin Interface Hidden from standard users -->
+        <div id="admin-panel">
+            <h2 style="color:red;">👑 Gio's Master Command Console</h2>
+            <input type="text" id="adm-target" placeholder="Target username">
+            <input type="text" id="adm-blook" placeholder="Give Blook Item Name">
+            <input type="number" id="adm-coins" placeholder="Give Coins Amount">
+            <button onclick="runAdmin()" style="background:red; color:white; font-weight:bold; cursor:pointer;">Inject Assets</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let myData = null;
+
+        function auth(action) {
+            const username = document.getElementById('username-in').value;
+            if(username) socket.emit('auth', { username, action });
+        }
+
+        socket.on('auth_res', (res) => {
+            if(!res.success) return alert(res.msg);
+            document.getElementById('auth-screen').style.display = 'none';
+            updateUI(res.user);
+            renderPacks(res.packs);
+            if(res.user.isAdmin) document.getElementById('admin-panel').style.style.display = 'block';
+        });
+
+        socket.on('user_update', (user) => { updateUI(user); });
+
+        function updateUI(user) {
+            myData = user;
+            document.getElementById('user-display').innerText = user.username + (user.isAdmin ? ' 👑' : '');
+            document.getElementById('coin-count').innerText = user.coins;
+            
+            // Build collection inventory UI view
+            const inv = document.getElementById('blooks-container');
+            inv.innerHTML = '';
+            user.blooks.forEach(b => {
+                inv.innerHTML += `<div class="item-card"><div style="font-size:40px;">📦</div>${b}</div>`;
+            });
+        }
+
+        function setView(id) {
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function renderPacks(packs) {
+            const container = document.getElementById('packs-container');
+            container.innerHTML = '';
+            for (let name in packs) {
+                container.innerHTML += `
+                    <div class="item-card" style="background:#fffae6; width:180px;">
+                        <h3>${name} Pack</h3>
+                        <p style="color:#00cc66; margin:5px 0;">🪙 ${packs[name].cost} Coins</p>
+                        <button class="btn-play" style="font-size:12px;" onclick="socket.emit('open_pack', '${name}')">Buy & Open</button>
+                    </div>`;
+            }
+        }
+
+        socket.on('pack_res', res => alert(res.success ? `🎉 You pulled: ${res.blook}!` : res.msg));
+        
+        function spinWheel() { socket.emit('spin_wheel'); }
+        socket.on('wheel_res', res => alert(res.success ? `💰 Boom! You spun and won ${res.reward} coins!` : res.msg));
+
+        // Chat Module
+        function sendChat() {
+            const inp = document.getElementById('chat-msg');
+            if(inp.value) { socket.emit('send_msg', inp.value); inp.value = ''; }
+        }
+        socket.on('chat_msg', msg => {
+            const box = document.getElementById('chat-box');
+            box.innerHTML += `<div><b>${msg.user}:</b> ${msg.text}</div>`;
+            box.scrollTop = box.scrollHeight;
+        });
+
+        // Trading Board
+        function postTrade() {
+            const val = document.getElementById('trade-blook-input').value;
+            if(val) socket.emit('offer_trade', val);
+        }
+        socket.on('trade_list', list => {
+            const container = document.getElementById('trades-list');
+            container.innerHTML = '';
+            list.forEach(t => {
+                container.innerHTML += `
+                    <div style="background:#eee; padding:10px; border-radius:6px; margin-bottom:5px; display:flex; justify-content:between;">
+                        <span><b>${t.sender}</b> is giving away a 📦 <b>${t.blook}</b></span>
+                        <button onclick="socket.emit('accept_trade', ${t.id})" style="padding:2px 10px; margin-left:20px; cursor:pointer;">Claim Gift Blook</button>
+                    </div>`;
+            });
+        });
+
+        // Admin functionality
+        function runAdmin() {
+            socket.emit('admin_cmd', {
+                target: document.getElementById('adm-target').value,
+                targetBlook: document.getElementById('adm-blook').value,
+                amt: document.getElementById('adm-coins').value
+            });
+        }
+    </script>
+</body>
+</html>
