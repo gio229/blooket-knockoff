@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blooket Deluxe Labs - RNG Drop Rates Edition</title>
+    <title>Blooket Deluxe Labs - Fusion Merge & Packs Update</title>
     <style>
         @import url('https://googleapis.com');
 
@@ -26,7 +26,7 @@
         .window.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Solid Authentication Layout System */
+        /* Authentication Layout */
         #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #250040 0%, #05000d 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
         #auth-screen h1 { font-size: 48px; color: #ffcc00; text-shadow: 0 8px 20px rgba(255, 204, 0, 0.4); letter-spacing: 2px; }
         .auth-container { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; width: 340px; }
@@ -36,7 +36,7 @@
         .btn-play { background: linear-gradient(135deg, #ff007f 0%, #7700cc 100%); color: white; border: none; font-weight: 900; font-family: 'Fredoka One', cursive; letter-spacing: 1px; padding: 14px 20px; border-radius: 14px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4); text-align: center; }
         .btn-play:hover { transform: scale(1.05); }
 
-        /* Market Cards & Rates Layout UI elements */
+        /* Market Cards & Rates Layout */
         .card-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 25px; padding-bottom: 20px; }
         .pack-card { background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 20px; text-align: center; width: 230px; cursor: pointer; }
         .pack-card:hover { transform: translateY(-8px); border-color: #ffcc00; box-shadow: 0 10px 20px rgba(255,204,0,0.15); }
@@ -45,10 +45,9 @@
         .rate-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
         /* Blook Rendering */
-        .blook-card { background: rgba(255, 255, 255, 0.04); border: 2px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 18px; text-align: center; width: 150px; font-weight: 900; font-size: 18px; animation: float 3s ease-in-out infinite; }
+        .blook-card { background: rgba(255, 255, 255, 0.04); border: 2px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 18px; text-align: center; width: 150px; font-weight: 900; font-size: 18px; position: relative; }
         .blook-avatar { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+        .dupe-badge { position: absolute; top: -10px; right: -10px; background: #ff007f; color: white; font-size: 12px; padding: 4px 8px; border-radius: 50%; font-weight: 900; border: 2px solid #0f001e; }
 
         /* Premium Rarity Tags */
         .rarity { font-size: 11px; text-transform: uppercase; font-weight: 900; padding: 3px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
@@ -59,13 +58,18 @@
         .chroma { background: linear-gradient(90deg, #ff007f, #7700cc, #00bcff); color: white; animation: rainbow 2s infinite linear; box-shadow: 0 0 15px rgba(255,0,127,0.5); }
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
+        /* Fusion Merge Grid Elements */
+        .merge-box-grid { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
+        .merge-slot { width: 120px; height: 160px; border: 3px dashed rgba(255,255,255,0.2); border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.01); font-size: 14px; color: rgba(255,255,255,0.4); font-weight: bold; position: relative; }
+        .merge-slot.filled { border-style: solid; border-color: #ffaa00; background: rgba(255,170,0,0.05); color: #fff; }
+        .remove-slot-btn { position: absolute; top: 5px; right: 5px; background: #ff3333; color: white; border: none; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
         /* PACK UNBOX OVERLAY DISPLAY GRAPHICS */
         #unbox-overlay { position: fixed; inset: 0; background: rgba(10, 0, 20, 0.95); z-index: 500; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
         .animated-pack { width: 180px; height: 240px; background: linear-gradient(135deg, #7700cc 0%, #3a0066 100%); border-radius: 16px; border: 4px solid #ffcc00; display: flex; justify-content: center; align-items: center; font-size: 80px; box-shadow: 0 20px 50px rgba(119,0,204,0.5); position: relative; cursor: pointer; }
         
         .shake-animation { animation: packShake 0.5s linear infinite; }
         @keyframes packShake { 0%, 100% { transform: rotate(0deg) scale(1); } 20% { transform: rotate(-8deg) scale(1.05); } 40% { transform: rotate(6deg) scale(1.05); } 60% { transform: rotate(-6deg) scale(1.05); } 80% { transform: rotate(8deg) scale(1.05); } }
-
         .burst-animation { animation: packBurst 0.4s ease-out forwards; }
         @keyframes packBurst { 0% { transform: scale(1); opacity: 1; filter: brightness(1); } 50% { transform: scale(1.4); opacity: 0.8; filter: brightness(3); } 100% { transform: scale(0); opacity: 0; } }
 
@@ -95,9 +99,9 @@
         </div>
     </div>
 
-    <!-- Always-Working Login Gateway Overlay Component -->
+    <!-- Login Gateway Overlay Component -->
     <div id="auth-screen">
-        <h1>BLOOK LABS V6</h1>
+        <h1>BLOOK LABS V7</h1>
         <div class="auth-container">
             <input type="text" id="username-in" placeholder="Username...">
             <input type="password" id="password-in" placeholder="Password...">
@@ -106,12 +110,13 @@
         </div>
     </div>
 
-    <!-- Sidebar Menu layout configuration panel indicators -->
+    <!-- Sidebar Menu Layout -->
     <div id="sidebar">
         <h2 id="user-display">GIO 👑</h2>
         <div class="coin-widget">🪙 <span id="coin-count">0</span></div>
         <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Market Packs</button>
-        <button class="nav-btn" id="btn-blooks" onclick="setView('blooks')">🎒 My Collection</button>
+        <button class="nav-btn" id="btn-blocks" onclick="setView('blooks')">🎒 My Collection</button>
+        <button class="nav-btn" id="btn-merge" onclick="setView('merge')">🧬 Fusion Merge</button>
         <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Reward Wheel</button>
         <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Lobby Chat</button>
         <button class="nav-btn logout-btn" onclick="logoutAccount()">🚪 Log Out</button>
@@ -119,33 +124,56 @@
 
     <!-- Active App Windows Container Panel Manager -->
     <div id="main-content">
+        <!-- Market Window -->
         <div id="market" class="window active">
             <h1 style="color: #ffcc00; font-size: 32px;">Blook Market</h1>
-            <p style="color: #b399ff; margin-bottom: 20px;">Open premium boxes containing strict pull percentages</p>
+            <p style="color: #b399ff; margin-bottom: 20px;">Open premium boxes with strict pull percentages</p>
             <div class="card-grid" id="packs-container"></div>
         </div>
 
+        <!-- Inventory List -->
         <div id="blooks" class="window">
             <h1 style="color: #ff007f; font-size: 32px; margin-bottom: 20px;">My Blooks</h1>
             <div class="card-grid" id="blooks-container"></div>
         </div>
 
+        <!-- Fusion Merge Window -->
+        <div id="merge" class="window">
+            <h1 style="color: #ffaa00; font-size: 32px;">🧬 Blook Fusion Machine</h1>
+            <p style="color: #b399ff;">Combine 3 duplicates of the **SAME RARITY** to fuse into 1 Blook of the next higher rarity tier!</p>
+            
+            <div class="merge-box-grid">
+                <div class="merge-slot" id="slot-0">Slot 1</div>
+                <div class="merge-slot" id="slot-1">Slot 2</div>
+                <div class="merge-slot" id="slot-2">Slot 3</div>
+            </div>
+            
+            <div style="text-align:center; margin-bottom: 30px;">
+                <button class="btn-play" style="background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%); padding: 15px 40px; font-size: 18px;" onclick="executeFusionMerge()">ENGAGE FUSION GRID</button>
+            </div>
+
+            <h3 style="margin-bottom:15px; color:#e0ccff;">Select Duplicate Items to Load:</h3>
+            <div class="card-grid" id="merge-inventory-selection"></div>
+        </div>
+
+        <!-- Wheel Window -->
         <div id="wheel" class="window" style="text-align: center;">
             <h1 style="color: #00bcff; font-size: 32px;">Hourly Cash Wheel</h1>
             <div style="font-size: 100px; margin: 30px 0;">🎡</div>
             <button class="btn-play" onclick="spinWheel()" style="padding: 15px 40px; font-size: 20px;">SPIN THE WHEEL</button>
         </div>
 
+        <!-- Chat Window -->
         <div id="chat" class="window">
             <h1 style="color: #00cc66; font-size: 32px; margin-bottom: 5px;">Lobby Chat</h1>
             <div id="chat-box"></div>
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="chat-msg" style="width:75%;" placeholder="Say hello to the chat log entries...">
+                <input type="text" id="chat-msg" style="width:75%;" placeholder="Say hello to the chat logs...">
                 <button class="btn-play" onclick="sendChat()">Send</button>
             </div>
         </div>
 
-        <!-- System Admin Hub Command Infrastructure Form Elements Panel -->
+        <!-- System Admin Hub Console -->
         <div id="admin-panel">
             <h2 style="color:#ff0055; margin-bottom: 15px;">👑 Admin Power Console Panel</h2>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
@@ -166,7 +194,7 @@
     </div>
 
     <script>
-        // Exact drop weight configurations mapped directly
+        // Expanded Database - 8 Unique Themed Packs Mapped Out
         const BLOOK_DETAILS = {
             'Knight': { emoji: '⚔️', rarity: 'common', rate: 50 },
             'Queen': { emoji: '👸', rarity: 'rare', rate: 25 },
@@ -184,38 +212,58 @@
             'Titan': { emoji: '👹', rarity: 'legendary', rate: 6 },
             
             'Rainbow Slime': { emoji: '🌈', rarity: 'chroma', rate: 70 },
-            'Neon Cat': { emoji: '🐱', rarity: 'chroma', rate: 30 }
+            'Neon Cat': { emoji: '🐱', rarity: 'chroma', rate: 30 },
+
+            // Aquatic Pack Additions
+            'Goldfish': { emoji: '🐟', rarity: 'common', rate: 65 },
+            'Shark': { emoji: '🦈', rarity: 'rare', rate: 25 },
+            'Kraken': { emoji: '🐙', rarity: 'epic', rate: 9 },
+            'Poseidon': { emoji: '🧜‍♂️', rarity: 'legendary', rate: 1 },
+
+            // Dino Pack Additions
+            'Stegosaurus': { emoji: '🦕', rarity: 'common', rate: 60 },
+            'Raptor': { emoji: '🦖', rarity: 'rare', rate: 28 },
+            'T-Rex': { emoji: '👑🦖', rarity: 'epic', rate: 10 },
+            'Meteor Strike': { emoji: '💥', rarity: 'legendary', rate: 2 },
+
+            // Halloween Pack Additions
+            'Ghost': { emoji: '👻', rarity: 'common', rate: 55 },
+            'Vampire': { emoji: '🧛', rarity: 'rare', rate: 30 },
+            'Grim Reaper': { emoji: '💀', rarity: 'epic', rate: 13 },
+            'Spooky Pumpkin': { emoji: '🎃', rarity: 'legendary', rate: 2 },
+
+            // Holiday Pack Additions
+            'Elf': { emoji: '🧝', rarity: 'common', rate: 50 },
+            'Reindeer': { emoji: '🦌', rarity: 'rare', rate: 32 },
+            'Snow Globe': { emoji: '🔮', rarity: 'epic', rate: 15 },
+            'Santa': { emoji: '🎅', rarity: 'legendary', rate: 3 }
         };
 
         const PACKS = {
             Medieval: { cost: 20, emoji: '🛡️', blooks: ['Knight', 'Queen', 'King', 'Wizard', 'Dragon'] },
             Space: { cost: 35, emoji: '🚀', blooks: ['Meteor', 'Astronaut', 'Alien', 'Star'] },
             Anime: { cost: 50, emoji: '⛩️', blooks: ['Ninja', 'Samurai', 'Titan'] },
+            Aquatic: { cost: 40, emoji: '🌊', blooks: ['Goldfish', 'Shark', 'Kraken', 'Poseidon'] },
+            Dino: { cost: 45, emoji: '🦴', blooks: ['Stegosaurus', 'Raptor', 'T-Rex', 'Meteor Strike'] },
+            Halloween: { cost: 60, emoji: '🎃', blooks: ['Ghost', 'Vampire', 'Grim Reaper', 'Spooky Pumpkin'] },
+            Holiday: { cost: 60, emoji: '🎄', blooks: ['Elf', 'Reindeer', 'Snow Globe', 'Santa'] },
             Chroma: { cost: 150, emoji: '✨', blooks: ['Rainbow Slime', 'Neon Cat'] }
         };
 
+        const RARITY_TIERS = ['common', 'rare', 'epic', 'legendary', 'chroma'];
+
         let currentUser = null;
         let selectedPackToOpen = null;
+        let currentMergeSlots = [null, null, null];
 
-        // Guaranteed Failure-Proof Database LocalStorage Initialize Engine
-        function getDB() {
-            try {
-                const db = localStorage.getItem('blook_account_db');
-                return db ? JSON.parse(db) : {};
-            } catch(e) {
-                return {};
-            }
-        }
-
-        function saveDB(database) {
-            localStorage.setItem('blook_account_db', JSON.stringify(database));
-        }
+        // Database Management
+        function getDB() { try { const db = localStorage.getItem('blook_account_db'); return db ? JSON.parse(db) : {}; } catch(e) { return {}; } }
+        function saveDB(database) { localStorage.setItem('blook_account_db', JSON.stringify(database)); }
 
         function handleAuth(type) {
             const username = document.getElementById('username-in').value.trim();
             const password = document.getElementById('password-in').value.trim();
             if (!username || !password) return alert("Please type your username and password!");
-
             const database = getDB();
 
             if (type === 'signup') {
@@ -247,42 +295,28 @@
         }
 
         function checkAdminVisibility() {
-            if (currentUser.rank === 'admin' || currentUser.rank === 'mod') {
-                document.getElementById('admin-panel').style.display = 'block';
-            } else {
-                document.getElementById('admin-panel').style.display = 'none';
-            }
+            document.getElementById('admin-panel').style.display = (currentUser.rank === 'admin' || currentUser.rank === 'mod') ? 'block' : 'none';
         }
 
-        function saveUserData() {
-            if (!currentUser) return;
-            const database = getDB();
-            database[currentUser.username.toLowerCase()] = currentUser;
-            saveDB(database);
-        }
-
-        function logoutAccount() {
-            currentUser = null;
-            document.getElementById('sidebar').style.display = 'none';
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
-        }
+        function saveUserData() { if (!currentUser) return; const database = getDB(); database[currentUser.username.toLowerCase()] = currentUser; saveDB(database); }
+        function logoutAccount() { currentUser = null; document.getElementById('sidebar').style.display = 'none'; document.getElementById('main-content').style.display = 'none'; document.getElementById('auth-screen').style.display = 'flex'; }
 
         function modifyRole() {
             const targetName = document.getElementById('adm-target-user').value.trim().toLowerCase();
             const selectedRole = document.getElementById('adm-role-select').value;
             const database = getDB();
-
             if (!database[targetName]) return alert("Target player username not found!");
             database[targetName].rank = selectedRole;
             saveDB(database);
-            alert(`Updated ${database[targetName].username}'s permissions to: ${selectedRole}`);
-            
-            if (currentUser.username.toLowerCase() === targetName) {
-                currentUser.rank = selectedRole;
-                checkAdminVisibility();
-                updateUI();
-            }
+            alert(`Updated \({database[targetName].username}'s permissions to:\){selectedRole}`);
+            if (currentUser.username.toLowerCase() === targetName) { currentUser.rank = selectedRole; checkAdminVisibility(); updateUI(); }
+        }
+
+        // Count instances of each Blook in inventory
+        function getInventoryCounts() {
+            const counts = {};
+            currentUser.blooks.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
+            return counts;
         }
 
         function updateUI() {
@@ -296,16 +330,20 @@
             const inv = document.getElementById('blooks-container');
             inv.innerHTML = '';
             
-            currentUser.blooks.forEach(b => {
+            const counts = getInventoryCounts();
+            for (let b in counts) {
                 const item = BLOOK_DETAILS[b] || { emoji: '📦', rarity: 'common' };
                 inv.innerHTML += `
                     <div class="blook-card">
                         <div class="blook-avatar">${item.emoji}</div>
                         <div style="font-size:14px;">${b}</div>
                         <span class="rarity ${item.rarity}">${item.rarity}</span>
+                        ${counts[b] > 1 ? `<div class="dupe-badge">x${counts[b]}</div>` : ''}
                     </div>`;
-            });
+            }
             saveUserData();
+            renderMergeInventory();
+            updateMergeGridSlots();
         }
 
         function setView(id) {
@@ -326,116 +364,4 @@
                 });
 
                 container.innerHTML += `
-                    <div class="pack-card" onclick="openPackCinematic('${name}')">
-                        <div style="font-size: 50px; margin-bottom: 10px;">${PACKS[name].emoji}</div>
-                        <h3 style="font-size: 20px; margin-bottom: 5px;">${name} Pack</h3>
-                        <p style="color:#ffd700; font-weight:900; margin-bottom:10px;">🪙 ${PACKS[name].cost}</p>
-                        <div class="rates-list">${ratesHTML}</div>
-                    </div>`;
-            }
-        }
-
-        function openPackCinematic(name) {
-            const pack = PACKS[name];
-            if (currentUser.coins < pack.cost) return alert('Not enough tokens!');
-            
-            currentUser.coins -= pack.cost;
-            selectedPackToOpen = name;
-            updateUI();
-
-            document.getElementById('reward-display-card').style.display = 'none';
-            const packWrapper = document.getElementById('animated-pack-wrapper');
-            packWrapper.style.display = 'flex';
-            packWrapper.className = 'animated-pack shake-animation';
-            packWrapper.innerText = pack.emoji;
-
-            document.getElementById('unbox-overlay').style.display = 'flex';
-        }
-
-        // Precise RNG Percentage Weight Calculator Logic
-        function pullRewardBlook(packName) {
-            const pack = PACKS[packName];
-            const rand = Math.random() * 100;
-            let cumulative = 0;
-
-            for (let i = 0; i < pack.blooks.length; i++) {
-                const name = pack.blooks[i];
-                cumulative += BLOOK_DETAILS[name].rate;
-                if (rand <= cumulative) {
-                    return name;
-                }
-            }
-            return pack.blooks[0]; 
-        }
-
-        function triggerBurstSequence() {
-            const packWrapper = document.getElementById('animated-pack-wrapper');
-            packWrapper.className = 'animated-pack burst-animation';
-
-            setTimeout(() => {
-                packWrapper.style.display = 'none';
-                
-                const reward = pullRewardBlook(selectedPackToOpen);
-                currentUser.blooks.push(reward);
-                updateUI();
-
-                const item = BLOOK_DETAILS[reward] || { emoji: '📦', rarity: 'common' };
-                document.getElementById('reward-emoji').innerText = item.emoji;
-                document.getElementById('reward-name').innerText = reward;
-                
-                const badge = document.getElementById('reward-badge');
-                badge.innerText = item.rarity;
-                badge.className = `rarity ${item.rarity}`;
-
-                const card = document.getElementById('reward-display-card');
-                card.style.display = 'flex';
-                if (item.rarity === 'chroma') card.style.borderColor = '#ff007f';
-                else if (item.rarity === 'legendary') card.style.borderColor = '#ffaa00';
-                else if (item.rarity === 'epic') card.style.borderColor = '#a020f0';
-                else card.style.borderColor = 'white';
-
-            }, 400);
-        }
-
-        function closeUnboxOverlay() {
-            document.getElementById('unbox-overlay').style.display = 'none';
-            selectedPackToOpen = null;
-        }
-
-        function spinWheel() {
-            const now = Date.now();
-            if (now - currentUser.lastWheel < 3600000) {
-                const remaining = Math.ceil((3600000 - (now - currentUser.lastWheel)) / 60000);
-                return alert(`Wheel cooling down! Wait ${remaining} minutes.`);
-            }
-            const reward = Math.floor(Math.random() * 200) + 100;
-            currentUser.coins += reward;
-            currentUser.lastWheel = now;
-            updateUI();
-            alert(`💰 Success! You scored +${reward} tokens!`);
-        }
-
-        function sendChat() {
-            const inp = document.getElementById('chat-msg');
-            if (!inp.value.trim()) return;
-            let tagStr = currentUser.username;
-            if(currentUser.rank === 'admin') tagStr = `<span class="tag-admin">[👑 ADMIN] ${currentUser.username}</span>`;
-            if(currentUser.rank === 'mod') tagStr = `<span class="tag-mod">[⭐ MOD] ${currentUser.username}</span>`;
-            
-            const box = document.getElementById('chat-box');
-            box.innerHTML += `<div class="chat-line"><b>${tagStr}:</b> ${inp.value.trim()}</div>`;
-            box.scrollTop = box.scrollHeight;
-            inp.value = '';
-        }
-
-        function runAdminInjection() {
-            const blookName = document.getElementById('adm-blook').value.trim();
-            const coinAmt = document.getElementById('adm-coins').value;
-            if (blookName) currentUser.blooks.push(blookName);
-            if (coinAmt) currentUser.coins += parseInt(coinAmt);
-            updateUI();
-            alert("Assets injected!");
-        }
-    </script>
-</body>
-</html>
+                    <div class="pack-card" onclick="openPackCinematic('${
