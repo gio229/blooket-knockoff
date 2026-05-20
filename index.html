@@ -3,439 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blook Labs v4 - Ultimate Simulator</title>
+    <title>Blooket Deluxe Labs</title>
     <style>
         @import url('https://googleapis.com');
 
-        * { 
-            box-sizing: border-box; 
-            font-family: 'Nunito', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        h1, h2, h3, .brand {
-            font-family: 'Fredoka One', cursive;
-        }
-
-        body { 
-            display: flex; 
-            background: linear-gradient(135deg, #0e001f 0%, #030008 100%); 
-            color: #ffffff;
-            height: 100vh; 
-            overflow: hidden; 
-        }
+        * { box-sizing: border-box; font-family: 'Nunito', sans-serif; margin: 0; padding: 0; transition: all 0.2s ease-in-out; }
+        h1, h2, h3, .brand { font-family: 'Fredoka One', cursive; }
+        body { display: flex; background: linear-gradient(135deg, #0f001e 0%, #05000d 100%); color: #ffffff; height: 100vh; overflow: hidden; }
         
-        /* Sidebar Layout styling */
-        #sidebar { 
-            width: 290px; 
-            background: rgba(18, 5, 36, 0.6); 
-            backdrop-filter: blur(15px);
-            border-right: 2px solid rgba(255, 255, 255, 0.05);
-            display: flex; 
-            flex-direction: column; 
-            padding: 25px; 
-            gap: 12px; 
-            display: none; 
-        }
-        #sidebar h2 { 
-            text-align: center; color: #ffcc00; font-size: 26px;
-            letter-spacing: 1px; margin-bottom: 5px;
-            text-shadow: 0 4px 12px rgba(255, 204, 0, 0.2);
-        }
-        .coin-widget {
-            background: linear-gradient(135deg, #ffd700 0%, #ff8800 100%);
-            padding: 15px; border-radius: 16px; text-align: center; 
-            font-weight: 900; font-size: 22px; color: #230040;
-            box-shadow: 0 6px 20px rgba(255, 136, 0, 0.25); margin-bottom: 15px;
-        }
-        .nav-btn { 
-            background: rgba(255, 255, 255, 0.03); color: #e0ccff; 
-            border: 1px solid rgba(255, 255, 255, 0.03); 
-            padding: 14px 20px; border-radius: 14px; cursor: pointer; 
-            text-align: left; font-size: 16px; font-weight: 700; 
-        }
-        .nav-btn:hover { 
-            background: #7700cc; color: white; transform: translateX(6px);
-            box-shadow: 0 5px 15px rgba(119, 0, 204, 0.35);
-        }
-        .nav-btn.active-btn {
-            background: #ff007f; color: white; border-color: #ff007f;
-            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
-        }
-        
-        /* App Section Content Area Components */
+        /* Navigation Sidebar */
+        #sidebar { width: 280px; background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border-right: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; padding: 25px; gap: 12px; display: none; }
+        #sidebar h2 { text-align: center; color: #ffcc00; font-size: 24px; letter-spacing: 1px; margin-bottom: 5px; text-shadow: 0 4px 10px rgba(255, 204, 0, 0.3); }
+        .coin-widget { background: linear-gradient(135deg, #ffd700 0%, #ff8800 100%); padding: 15px; border-radius: 16px; text-align: center; font-weight: 900; font-size: 20px; color: #3a0066; box-shadow: 0 6px 20px rgba(255, 136, 0, 0.3); margin-bottom: 15px; }
+        .nav-btn { background: rgba(255, 255, 255, 0.04); color: #e0ccff; border: 1px solid rgba(255, 255, 255, 0.03); padding: 14px 20px; border-radius: 14px; cursor: pointer; text-align: left; font-size: 16px; font-weight: 700; }
+        .nav-btn:hover { background: #7700cc; color: white; transform: translateX(5px); box-shadow: 0 5px 15px rgba(119, 0, 204, 0.4); }
+        .nav-btn.active-btn { background: #ff007f; color: white; border-color: #ff007f; box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4); }
+        .logout-btn { background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.2); color: #ff5555; font-weight: bold; margin-top: auto; }
+        .logout-btn:hover { background: #ff3333; color: white; }
+
+        /* Window App Spaces */
         #main-content { flex: 1; padding: 40px; overflow-y: auto; display: none; }
-        .window { 
-            display: none; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px);
-            padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6); height: 100%; 
-            animation: fadeIn 0.4s ease-out;
-        }
+        .window { display: none; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); height: 100%; animation: fadeIn 0.4s ease-out; }
         .window.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Working Authentication Screens */
+        #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #250040 0%, #05000d 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        #auth-screen h1 { font-size: 48px; color: #ffcc00; text-shadow: 0 8px 20px rgba(255, 204, 0, 0.4); letter-spacing: 2px; }
+        .auth-container { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; width: 340px; }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        input, select { padding: 14px 20px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.06); color: white; font-size: 16px; font-weight: 700; outline: none; text-align: center; width: 100%; }
+        input:focus { border-color: #ff007f; box-shadow: 0 0 15px rgba(255, 0, 127, 0.3); }
 
-        /* High Fidelity Authentication Screen */
-        #auth-screen { 
-            position: fixed; inset: 0; 
-            background: radial-gradient(circle at center, #230040 0%, #030008 100%); 
-            z-index: 100; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; gap: 24px; 
-        }
-        #auth-screen h1 {
-            font-size: 54px; color: #ffcc00;
-            text-shadow: 0 8px 24px rgba(255, 204, 0, 0.35);
-            letter-spacing: 2px; animation: floatAnim 3s infinite alternate ease-in-out;
-        }
-        @keyframes floatAnim {
-            from { transform: translateY(0); }
-            to { transform: translateY(-12px); }
-        }
+        .btn-play { background: linear-gradient(135deg, #ff007f 0%, #7700cc 100%); color: white; border: none; font-weight: 900; font-family: 'Fredoka One', cursive; letter-spacing: 1px; padding: 14px 20px; border-radius: 14px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4); text-align: center; }
+        .btn-play:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6); }
 
-        /* Dedicated Authentication Card Container */
-        .auth-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 40px;
-            border-radius: 24px;
-            width: 380px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .auth-tabs {
-            display: flex;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 10px;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            font-weight: 900;
-            cursor: pointer;
-            border-radius: 10px;
-            color: #b399ff;
-        }
-
-        .auth-tab.active-tab {
-            background: #7700cc;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(119, 0, 204, 0.3);
-        }
-
-        input { 
-            padding: 14px 20px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.08); 
-            background: rgba(255, 255, 255, 0.05); color: white;
-            font-size: 16px; font-weight: 600; outline: none; width: 100%;
-        }
-        input:focus { border-color: #ff007f; box-shadow: 0 0 15px rgba(255, 0, 127, 0.25); }
-
-        .btn-play { 
-            background: linear-gradient(135deg, #ff007f 0%, #7700cc 100%); 
-            color: white; border: none; font-weight: 900; 
-            font-family: 'Fredoka One', cursive; letter-spacing: 1px;
-            padding: 14px 24px; border-radius: 12px; cursor: pointer; width: 100%;
-            box-shadow: 0 5px 20px rgba(255, 0, 127, 0.35); text-transform: uppercase;
-        }
-        .btn-play:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(255, 0, 127, 0.5); }
-
-        /* Auto-Open Component UI Controls */
-        .toggle-container {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.04); width: fit-content;
-            padding: 10px 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);
-        }
+        /* Auto Switch UI elements */
+        .toggle-container { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; background: rgba(255, 255, 255, 0.05); width: fit-content; padding: 10px 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); }
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; inset: 0; background-color: #333;
-            transition: .3s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px;
-            left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #444; transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: #ff007f; }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        /* Grid Display Elements */
+        /* Grids & Panels */
         .card-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 25px; padding-bottom: 20px; }
-        .pack-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.06); padding: 25px;
-            border-radius: 20px; text-align: center; width: 220px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        .pack-card:hover { transform: translateY(-5px); border-color: #ffcc00; }
-
-        .blook-card { 
-            background: rgba(255, 255, 255, 0.03); border: 2px solid rgba(255, 255, 255, 0.06); 
-            padding: 20px; border-radius: 18px; text-align: center; width: 150px; 
-            font-weight: 900; font-size: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-        .blook-avatar { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.25)); }
+        .pack-card { background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.08); padding: 25px; border-radius: 20px; text-align: center; width: 220px; }
+        .blook-card { background: rgba(255, 255, 255, 0.04); border: 2px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 18px; text-align: center; width: 150px; font-weight: 900; font-size: 18px; }
+        .blook-avatar { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); }
         
-        /* Tier badges */
+        /* Badges */
         .rarity { font-size: 11px; text-transform: uppercase; font-weight: 900; padding: 3px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
         .common { background: #5e5e5e; color: white; }
         .rare { background: #00bcff; color: white; }
         .epic { background: #a020f0; color: white; }
-        .legendary { background: #ffaa00; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .legendary { background: #ffaa00; color: white; }
         .chroma { background: linear-gradient(90deg, #ff007f, #7700cc, #00bcff); color: white; animation: rainbow 2s infinite linear; }
-
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        #chat-box { height: 70%; border: 1px solid rgba(255,255,255,0.06); overflow-y: auto; padding: 20px; margin-bottom: 15px; border-radius: 16px; background: rgba(0, 0, 0, 0.2); }
-        .chat-line { margin-bottom: 10px; font-size: 15px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 10px; width: fit-content; }
-        .owner-tag { color: #ff007f; font-weight: 900; }
-        #admin-panel { border: 2px dashed #ff0055; background: rgba(255, 0, 85, 0.03); margin-top: 30px; padding: 20px; border-radius: 18px; display: none; }
+        /* Chat System */
+        #chat-box { height: 65%; border: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 20px; margin-bottom: 15px; border-radius: 16px; background: rgba(0, 0, 0, 0.2); }
+        .chat-line { margin-bottom: 10px; font-size: 15px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; width: fit-content; }
+        .tag-admin { color: #ff0055; font-weight: 900; text-shadow: 0 0 8px rgba(255,0,85,0.5); }
+        .tag-mod { color: #00bfff; font-weight: 900; }
         
-        #log-panel { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; margin-top: 25px; max-height: 180px; overflow-y: auto; font-family: monospace; border: 1px solid rgba(255,255,255,0.04); }
+        /* Master Panel Design */
+        #admin-panel { border: 2px dashed #ff0055; background: rgba(255, 0, 85, 0.05); margin-top: 30px; padding: 20px; border-radius: 18px; display: none; }
+        #log-panel { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; margin-top: 25px; max-height: 150px; overflow-y: auto; font-family: monospace; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
-    <!-- Unified Registration Gateway Portal Area -->
+    <!-- Working Authenticator Screen Interface -->
     <div id="auth-screen">
         <h1>BLOOK LABS V4</h1>
-        
-        <div class="auth-card">
-            <!-- Toggle Selector Segment Bar Controls -->
-            <div class="auth-tabs">
-                <div class="auth-tab active-tab" id="tab-login" onclick="setAuthMode('login')">Log In</div>
-                <div class="auth-tab" id="tab-signup" onclick="setAuthMode('signup')">Sign Up</div>
-            </div>
-
-            <input type="text" id="username-in" placeholder="Username">
-            <input type="password" id="password-in" placeholder="Password">
-            
-            <button class="btn-play" id="auth-action-btn" onclick="executeAuth()">Log In</button>
+        <div class="auth-container">
+            <input type="text" id="username-in" placeholder="Username...">
+            <input type="password" id="password-in" placeholder="Password...">
+            <button class="btn-play" onclick="handleAuth('login')">Log In</button>
+            <button class="btn-play" onclick="handleAuth('signup')" style="background: #00cc66;">Create Free Account</button>
         </div>
     </div>
 
-    <!-- Interface Structure Sidebar Navigation Panel -->
+    <!-- Active Navigation Framework Panels -->
     <div id="sidebar">
         <h2 id="user-display">GIO 👑</h2>
-        <div class="coin-widget">🪙 <span id="coin-count">100</span></div>
+        <div class="coin-widget">🪙 <span id="coin-count">0</span></div>
         <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Market Packs</button>
         <button class="nav-btn" id="btn-blooks" onclick="setView('blooks')">🎒 My Collection</button>
         <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Reward Wheel</button>
-        <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Global Live Chat</button>
+        <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Lobby Chat</button>
+        <button class="nav-btn logout-btn" onclick="logoutAccount()">🚪 Log Out</button>
     </div>
 
-    <!-- Active Workspace Panel -->
+    <!-- Page Windows Manager -->
     <div id="main-content">
-        <!-- Pack Shop Window -->
+        <!-- Pack Shop Panel -->
         <div id="market" class="window active">
             <h1 style="color: #ffcc00; font-size: 32px;">Blook Market</h1>
-            <p style="color: #b399ff; margin-bottom: 20px;">Exchange your earned tokens for mystery pack pulls!</p>
-            
+            <p style="color: #b399ff; margin-bottom: 20px;">Open premium boxes instantly</p>
             <div class="toggle-container">
-                <span style="font-weight: 700; color: #ff007f;">⚡ Auto-Open Enabled:</span>
-                <label class="switch">
-                    <input type="checkbox" id="auto-open-toggle" onchange="toggleAutoOpen()">
-                    <span class="slider"></span>
-                </label>
+                <span style="font-weight: 700; color: #ff007f;">⚡ Auto-Open Toggled:</span>
+                <label class="switch"><input type="checkbox" id="auto-open-toggle" onchange="toggleAutoOpen()"><span class="slider"></span></label>
             </div>
-
             <div class="card-grid" id="packs-container"></div>
-            <div id="log-panel" style="display:none;"><div style="color:#ffcc00; font-weight:bold; margin-bottom:5px;">📋 Drop History Feed:</div><div id="log-content"></div></div>
+            <div id="log-panel" style="display:none;"><div id="log-content"></div></div>
         </div>
 
-        <!-- Inventory List Window -->
+        <!-- Inventory List Box -->
         <div id="blooks" class="window">
             <h1 style="color: #ff007f; font-size: 32px;">My Blooks</h1>
-            <p style="color: #b399ff;">View all rare and premium tier styles gathered.</p>
             <div class="card-grid" id="blooks-container"></div>
         </div>
 
-        <!-- Claim Wheel Widget -->
+        <!-- Bonus Reward System -->
         <div id="wheel" class="window" style="text-align: center;">
-            <h1 style="color: #00bcff; font-size: 32px; margin-bottom: 10px;">Hourly Cash Bonus</h1>
-            <p style="color: #b399ff; margin-bottom: 40px;">Claim completely free coin tokens instantly every single hour!</p>
-            <div style="font-size: 100px; margin-bottom: 20px; animation: floatAnim 2s infinite alternate ease-in-out;">🎡</div>
-            <button class="btn-play" onclick="spinWheel()" style="padding: 20px 50px; font-size: 22px;">SPIN THE WHEEL</button>
+            <h1 style="color: #00bcff; font-size: 32px;">Hourly Cash Wheel</h1>
+            <div style="font-size: 100px; margin: 20px 0;">🎡</div>
+            <button class="btn-play" onclick="spinWheel()" style="padding: 15px 40px; font-size: 20px;">SPIN THE WHEEL</button>
         </div>
 
-        <!-- Chat Framework Component -->
+        <!-- Living Room Chat Panel Simulator -->
         <div id="chat" class="window">
             <h1 style="color: #00cc66; font-size: 32px; margin-bottom: 5px;">Lobby Chat</h1>
             <div id="chat-box"></div>
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="chat-msg" style="width:75%;" placeholder="Type a funny message here...">
+                <input type="text" id="chat-msg" style="width:75%;" placeholder="Say hello to the chat bots...">
                 <button class="btn-play" onclick="sendChat()">Send</button>
             </div>
         </div>
 
-        <!-- Admin Control Hub Console -->
+        <!-- Secret Panel Managed Exclusively By GIO -->
         <div id="admin-panel">
-            <h2 style="color:#ff0055; margin-bottom: 10px;">👑 Owner Admin Command Console</h2>
+            <h2 style="color:#ff0055; margin-bottom: 15px;">👑 Admin Power Console Panel</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                <input type="text" id="adm-target-user" placeholder="Target Player Username" style="width: 220px;">
+                <select id="adm-role-select" style="width: 180px;">
+                    <option value="admin">Give Admin Rank</option>
+                    <option value="mod">Give Moderator Rank</option>
+                    <option value="user">Demote to Regular Player</option>
+                </select>
+                <button class="btn-play" onclick="modifyRole()" style="background: #ff0055;">Apply Rank Update</button>
+            </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <input type="text" id="adm-blook" placeholder="Blook Name" style="width: 200px;">
-                <input type="number" id="adm-coins" placeholder="Coins Amount" style="width: 200px;">
-                <button class="btn-play" onclick="runAdmin()" style="background: #ff0055; box-shadow:none;">INJECT ASSETS</button>
+                <input type="text" id="adm-blook" placeholder="Gift Blook Item Name" style="width: 220px;">
+                <input type="number" id="adm-coins" placeholder="Tokens Count" style="width: 180px;">
+                <button class="btn-play" onclick="runAdminInjection()" style="background: #333;">Inject Items / Coins</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Database Item Setup Dictionary Mapping Details
         const BLOOK_DETAILS = {
-            'Knight': { emoji: '⚔️', rarity: 'common' },
-            'Queen': { emoji: '👸', rarity: 'rare' },
-            'King': { emoji: '👑', rarity: 'rare' },
-            'Wizard': { emoji: '🧙', rarity: 'epic' },
-            'Dragon': { emoji: '🐉', rarity: 'legendary' },
-            'Meteor': { emoji: '☄️', rarity: 'common' },
-            'Astronaut': { emoji: '👨‍🚀', rarity: 'rare' },
-            'Alien': { emoji: '👽', rarity: 'rare' },
-            'UFO': { emoji: '🛸', rarity: 'epic' },
-            'Star': { emoji: '⭐', rarity: 'legendary' },
-            'Ninja': { emoji: '🥷', rarity: 'common' },
-            'Samurai': { emoji: '👺', rarity: 'rare' },
-            'Mech Robot': { emoji: '🤖', rarity: 'epic' },
-            'Titan Creature': { emoji: '👹', rarity: 'legendary' },
-            'Hacker Cat': { emoji: '🐱‍💻', rarity: 'rare' },
-            'Cyborg': { emoji: '🦿', rarity: 'epic' },
-            'AI Matrix': { emoji: '💾', rarity: 'epic' },
-            'Cyber Core': { emoji: '🔮', rarity: 'legendary' },
-            'Monkey': { emoji: '🐒', rarity: 'common' },
-            'Zebra': { emoji: '🦓', rarity: 'rare' },
-            'Lion': { emoji: '🦁', rarity: 'epic' },
-            'Elephant': { emoji: '🐘', rarity: 'legendary' },
-            'Rainbow Slime': { emoji: '🌈', rarity: 'chroma' },
-            'Neon Cat': { emoji: '🐱', rarity: 'chroma' },
-            'Glitch Blob': { emoji: '👾', rarity: 'chroma' },
-            'Void Overlord': { emoji: '🧿', rarity: 'chroma' }
+            'Knight': { emoji: '⚔️', rarity: 'common' }, 'Queen': { emoji: '👸', rarity: 'rare' },
+            'King': { emoji: '👑', rarity: 'rare' }, 'Wizard': { emoji: '🧙', rarity: 'epic' },
+            'Dragon': { emoji: '🐉', rarity: 'legendary' }, 'Meteor': { emoji: '☄️', rarity: 'common' },
+            'Astronaut': { emoji: '👨‍🚀', rarity: 'rare' }, 'Alien': { emoji: '👽', rarity: 'rare' },
+            'UFO': { emoji: '🛸', rarity: 'epic' }, 'Star': { emoji: '⭐', rarity: 'legendary' },
+            'Ninja': { emoji: '🥷', rarity: 'common' }, 'Samurai': { emoji: '👺', rarity: 'rare' },
+            'Mech Robot': { emoji: '🤖', rarity: 'epic' }, 'Titan Creature': { emoji: '👹', rarity: 'legendary' },
+            'Rainbow Slime': { emoji: '🌈', rarity: 'chroma' }, 'Neon Cat': { emoji: '🐱', rarity: 'chroma' }
         };
 
         const PACKS = {
             Medieval: { cost: 20, blooks: ['Knight', 'King', 'Queen', 'Wizard', 'Dragon'] },
             Space: { cost: 35, blooks: ['Meteor', 'Astronaut', 'Alien', 'UFO', 'Star'] },
             Anime: { cost: 50, blooks: ['Ninja', 'Samurai', 'Mech Robot', 'Titan Creature'] },
-            Cyberpunk: { cost: 65, blooks: ['Hacker Cat', 'Cyborg', 'AI Matrix', 'Cyber Core'] },
-            Safari: { cost: 80, blooks: ['Monkey', 'Zebra', 'Lion', 'Elephant'] },
-            Chroma: { cost: 200, blooks: ['Rainbow Slime', 'Neon Cat', 'Glitch Blob', 'Void Overlord'] }
+            Chroma: { cost: 150, blooks: ['Rainbow Slime', 'Neon Cat'] }
         };
 
-        let currentAuthMode = 'login';
         let currentUser = null;
         let autoOpenInterval = null;
         let activePackTarget = null;
 
-        const botMessages = ["Who wants to trade an Elephant?", "Just pulled a Neon Cat!! OMG", "Gio this auto clicker is awesome", "Leaving auto-open on all night long", "Check out my safari inventory"];
-
-        function setAuthMode(mode) {
-            currentAuthMode = mode;
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active-tab'));
-            if(mode === 'login') {
-                document.getElementById('tab-login').classList.add('active-tab');
-                document.getElementById('auth-action-btn').innerText = "Log In";
-            } else {
-                document.getElementById('tab-signup').classList.add('active-tab');
-                document.getElementById('auth-action-btn').innerText = "Sign Up";
-            }
-        }
-
-        function executeAuth() {
+        // Core Working Database Authentication System
+        function handleAuth(type) {
             const username = document.getElementById('username-in').value.trim();
-            const password = document.getElementById('password-in').value;
+            const password = document.getElementById('password-in').value.trim();
 
-            if (!username || !password) {
-                return alert("Please fill out both the username and password fields!");
-            }
+            if (!username || !password) return alert("Please type your username and password!");
 
-            const storageKey = 'blook_user_v4_' + username.toLowerCase();
-            const existingAccount = localStorage.getItem(storageKey);
+            const database = JSON.parse(localStorage.getItem('blook_account_db') || "{}");
 
-            if (currentAuthMode === 'signup') {
-                if (existingAccount) {
-                    return alert("This username is already taken! Try another one or click Log In.");
-                }
+            if (type === 'signup') {
+                if (database[username.toLowerCase()]) return alert("This username is already taken!");
                 
-                // Block hackers trying to sign up as Gio without credentials
-                if (username.toLowerCase() === 'gio' && password !== 'masteradmin77') {
-                    return alert("Access Denied: High-level administrator authentication security clearance required for username 'GIO'!");
-                }
-
-                const newUser = {
+                database[username.toLowerCase()] = {
                     username: username,
-                    password: password, // In-browser prototype database plain-text safety mapping
+                    password: password,
                     coins: 200,
                     blooks: [],
                     lastWheel: 0,
-                    isAdmin: (username.toLowerCase() === 'gio')
+                    rank: (username.toLowerCase() === 'gio') ? 'admin' : 'user'
                 };
-
-                localStorage.setItem(storageKey, JSON.stringify(newUser));
-                currentUser = newUser;
-                alert("Account created successfully! Welcome to Blook Labs.");
-            } else {
-                // Log In Process
-                if (!existingAccount) {
-                    return alert("No account found with this username! Check your spelling or switch to Sign Up.");
-                }
-
-                const accountData = JSON.parse(existingAccount);
-                if (accountData.password !== password) {
-                    return alert("Incorrect password! Please try again.");
-                }
-
-                currentUser = accountData;
+                localStorage.setItem('blook_account_db', JSON.stringify(database));
+                alert("Account created successfully! Click Log In to enter.");
+                return;
             }
 
-            // Successfully validated: Transition layouts smoothly
-            document.getElementById('auth-screen').style.opacity = 0;
-            setTimeout(() => {
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('sidebar').style.display = 'flex';
-                document.getElementById('main-content').style.display = 'block';
-                if (currentUser.isAdmin) document.getElementById('admin-panel').style.display = 'block';
-            }, 200);
+            if (type === 'login') {
+                const userRecord = database[username.toLowerCase()];
+                if (!userRecord || userRecord.password !== password) return alert("Wrong username or password combo!");
+                
+                currentUser = userRecord;
+                launchDashboard();
+            }
+        }
 
+        function launchDashboard() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'block';
+            
+            checkAdminVisibility();
             updateUI();
             renderPacks();
-            startChatBot();
+        }
+
+        function checkAdminVisibility() {
+            if (currentUser.rank === 'admin' || currentUser.rank === 'mod') {
+                document.getElementById('admin-panel').style.display = 'block';
+            } else {
+                document.getElementById('admin-panel').style.display = 'none';
+            }
+        }
+
+        function saveUserData() {
+            const database = JSON.parse(localStorage.getItem('blook_account_db') || "{}");
+            database[currentUser.username.toLowerCase()] = currentUser;
+            localStorage.setItem('blook_account_db', JSON.stringify(database));
+        }
+
+        function logoutAccount() {
+            clearInterval(autoOpenInterval);
+            currentUser = null;
+            document.getElementById('sidebar').style.display = 'none';
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('username-in').value = '';
+            document.getElementById('password-in').value = '';
+        }
+
+        // Custom Mod and Admin Promotion Logic
+        function modifyRole() {
+            const targetName = document.getElementById('adm-target-user').value.trim().toLowerCase();
+            const selectedRole = document.getElementById('adm-role-select').value;
+            const database = JSON.parse(localStorage.getItem('blook_account_db') || "{}");
+
+            if (!database[targetName]) return alert("Target player username not found inside database!");
+
+            database[targetName].rank = selectedRole;
+            localStorage.setItem('blook_account_db', JSON.stringify(database));
+            alert(`Successfully updated ${database[targetName].username}'s permissions status to: ${selectedRole}`);
+            
+            if (currentUser.username.toLowerCase() === targetName) {
+                currentUser.rank = selectedRole;
+                checkAdminVisibility();
+                updateUI();
+            }
         }
 
         function updateUI() {
-            document.getElementById('user-display').innerHTML = currentUser.username + (currentUser.isAdmin ? ' <span style="color:#ff007f">👑</span>' : '');
+            let rankTag = '';
+            if(currentUser.rank === 'admin') rankTag = ' <span class="tag-admin">[👑 ADMIN]</span>';
+            if(currentUser.rank === 'mod') rankTag = ' <span class="tag-mod">[⭐ MOD]</span>';
+
+            document.getElementById('user-display').innerHTML = currentUser.username + rankTag;
             document.getElementById('coin-count').innerText = currentUser.coins;
             
             const inv = document.getElementById('blooks-container');
             inv.innerHTML = '';
             
-            if(currentUser.blooks.length === 0) {
-                inv.innerHTML = `<p style="color: rgba(255,255,255,0.4); font-style: italic;">No Blooks unlocked yet. Go open some market packs!</p>`;
-            }
-
             currentUser.blooks.forEach(b => {
                 const item = BLOOK_DETAILS[b] || { emoji: '📦', rarity: 'common' };
                 inv.innerHTML += `
                     <div class="blook-card">
                         <div class="blook-avatar">${item.emoji}</div>
-                        <div style="font-size:14px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${b}</div>
+                        <div style="font-size:14px;">${b}</div>
                         <span class="rarity ${item.rarity}">${item.rarity}</span>
                     </div>`;
             });
-            localStorage.setItem('blook_user_v4_' + currentUser.username.toLowerCase(), JSON.stringify(currentUser));
+            saveUserData();
         }
 
         function setView(id) {
             document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-btn'));
-            
             document.getElementById(id).classList.add('active');
             document.getElementById('btn-' + id).classList.add('active-btn');
         }
@@ -447,16 +301,15 @@
                 container.innerHTML += `
                     <div class="pack-card" id="pack-node-${name}">
                         <h3 style="font-size: 20px; margin-bottom: 5px;">${name} Pack</h3>
-                        <p style="color:#ffd700; font-weight:900; margin-bottom: 15px; font-size:16px;">🪙 ${PACKS[name].cost}</p>
+                        <p style="color:#ffd700; font-weight:900; margin-bottom: 15px;">🪙 ${PACKS[name].cost}</p>
                         <button class="btn-play" style="font-size:12px; padding: 10px 15px;" onclick="handlePackTrigger('${name}')">OPEN</button>
                     </div>`;
             }
         }
 
         function handlePackTrigger(name) {
-            const isAuto = document.getElementById('auto-open-toggle').checked;
-            if(isAuto) {
-                document.querySelectorAll('.pack-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.06)');
+            if(document.getElementById('auto-open-toggle').checked) {
+                document.querySelectorAll('.pack-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.08)');
                 activePackTarget = name;
                 document.getElementById(`pack-node-${name}`).style.borderColor = '#ff007f';
                 document.getElementById('log-panel').style.display = 'block';
@@ -468,26 +321,20 @@
         function openPackSingle(name) {
             const pack = PACKS[name];
             if (currentUser.coins < pack.cost) return alert('Not enough tokens!');
-            
             currentUser.coins -= pack.cost;
-            const rewardBlook = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
-            currentUser.blooks.push(rewardBlook);
-            
+            const reward = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
+            currentUser.blooks.push(reward);
             updateUI();
-            alert(`🎉 UNBOXED: ${rewardBlook}!`);
+            alert(`🎉 UNBOXED: ${reward}!`);
         }
 
         function toggleAutoOpen() {
-            const isChecked = document.getElementById('auto-open-toggle').checked;
-            if(isChecked) {
-                document.getElementById('log-content').innerHTML = `<i>Click an OPEN button on any pack to begin automated opening loops...</i>`;
-                document.getElementById('log-panel').style.display = 'block';
-                
+            if(document.getElementById('auto-open-toggle').checked) {
+                document.getElementById('log-content').innerHTML = `<i>Click OPEN on any pack card node box to start unboxing loop...</i>`;
                 autoOpenInterval = setInterval(() => {
                     if(!activePackTarget) return;
                     const pack = PACKS[activePackTarget];
                     if(currentUser.coins < pack.cost) {
-                        logFeed(`❌ Out of coins! Stopped unboxing.`);
                         document.getElementById('auto-open-toggle').checked = false;
                         toggleAutoOpen();
                         return;
@@ -495,23 +342,16 @@
                     currentUser.coins -= pack.cost;
                     const reward = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
                     currentUser.blooks.push(reward);
-                    
-                    const meta = BLOOK_DETAILS[reward] || { rarity: 'common' };
-                    logFeed(`Pulled a <span style="text-transform:uppercase; font-weight:bold;" class="${meta.rarity}">${reward}</span> from the ${activePackTarget} box.`);
+                    document.getElementById('log-content').innerHTML = `<div>Pulled: <b>${reward}</b></div>` + document.getElementById('log-content').innerHTML;
                     updateUI();
-                }, 250); 
+                }, 200);
             } else {
                 clearInterval(autoOpenInterval);
                 activePackTarget = null;
-                document.querySelectorAll('.pack-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.06)');
+                document.querySelectorAll('.pack-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.08)');
             }
         }
 
-        function logFeed(text) {
-            const el = document.getElementById('log-content');
-            el.innerHTML = `<div>${text}</div>` + el.innerHTML;
-        }
-        
         function spinWheel() {
             const now = Date.now();
             if (now - currentUser.lastWheel < 3600000) {
@@ -528,36 +368,25 @@
         function sendChat() {
             const inp = document.getElementById('chat-msg');
             if (!inp.value.trim()) return;
-            let nameDisplay = currentUser.username;
-            if(currentUser.isAdmin) nameDisplay = `<span class="owner-tag">[👑 OWNER] GIO</span>`;
-            addChatMessage(nameDisplay, inp.value.trim());
+            let tagStr = currentUser.username;
+            if(currentUser.rank === 'admin') tagStr = `<span class="tag-admin">[👑 ADMIN] ${currentUser.username}</span>`;
+            if(currentUser.rank === 'mod') tagStr = `<span class="tag-mod">[⭐ MOD] ${currentUser.username}</span>`;
+            
+            const box = document.getElementById('chat-box');
+            box.innerHTML += `<div class="chat-line"><b>${tagStr}:</b> ${inp.value.trim()}</div>`;
+            box.scrollTop = box.scrollHeight;
             inp.value = '';
         }
 
-        function addChatMessage(user, text) {
-            const box = document.getElementById('chat-box');
-            box.innerHTML += `<div class="chat-line"><b>${user}:</b> ${text}</div>`;
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function startChatBot() {
-            setInterval(() => {
-                const randomUser = "Player_" + Math.floor(Math.random() * 800 + 100);
-                const randomText = botMessages[Math.floor(Math.random() * botMessages.length)];
-                addChatMessage(randomUser, randomText);
-            }, 6000);
-        }
-
-        function runAdmin() {
+        function runAdminInjection() {
             const blookName = document.getElementById('adm-blook').value.trim();
             const coinAmt = document.getElementById('adm-coins').value;
-            if (blookName) {
-                if(!BLOOK_DETAILS[blookName]) BLOOK_DETAILS[blookName] = { emoji: '💎', rarity: 'chroma' };
-                currentUser.blooks.push(blookName);
-            }
+            
+            if (blookName) currentUser.blooks.push(blookName);
             if (coinAmt) currentUser.coins += parseInt(coinAmt);
+            
             updateUI();
-            alert("Admin assets injected successfully!");
+            alert("Assets injected successfully into your profile!");
         }
     </script>
 </body>
