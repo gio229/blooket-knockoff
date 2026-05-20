@@ -3,374 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blooket Premium Simulator Hub</title>
+    <title>Blooket Deluxe Labs - Ultimate Animations Edition</title>
     <style>
         @import url('https://googleapis.com');
 
-        * { box-sizing: border-box; font-family: 'Nunito', sans-serif; margin: 0; padding: 0; outline: none; }
-        h1, h2, h3, .blook-title, .brand-logo { font-family: 'Fredoka One', cursive; user-select: none; }
+        * { box-sizing: border-box; font-family: 'Nunito', sans-serif; margin: 0; padding: 0; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        h1, h2, h3, .brand { font-family: 'Fredoka One', cursive; }
+        body { display: flex; background: linear-gradient(135deg, #0f001e 0%, #05000d 100%); color: #ffffff; height: 100vh; overflow: hidden; }
         
-        body { display: flex; background: #0c081c; color: #ffffff; height: 100vh; overflow: hidden; }
-        
-        /* Premium Layout Architecture */
-        #sidebar { width: 300px; background: #181330; border-right: 3px solid #282147; display: flex; flex-direction: column; padding: 25px; gap: 10px; display: none; }
-        .brand-logo { font-size: 32px; color: #ffffff; text-align: center; margin-bottom: 10px; text-shadow: 0 4px 0 #0f0b21; }
-        
-        .profile-card { background: #241d45; border-radius: 18px; padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 4px solid #1c1638; margin-bottom: 10px; }
-        .avatar-frame { font-size: 36px; background: #32295c; padding: 8px; border-radius: 14px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
-        .profile-info { flex: 1; }
-        .profile-name { font-weight: 900; font-size: 18px; color: #fff; display: flex; align-items: center; gap: 5px; }
-        .role-tag { font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
-        .role-admin { background: #ff0055; color: white; box-shadow: 0 0 10px rgba(255,0,85,0.4); }
-        .role-mod { background: #00bfff; color: white; }
-        
-        .coin-balance { background: linear-gradient(145deg, #ffca28, #ff8f00); padding: 14px; border-radius: 16px; font-weight: 900; font-size: 22px; color: #3e2723; text-align: center; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
-        
-        .nav-btn { background: #241d45; color: #bcaaa4; border: none; padding: 15px 20px; border-radius: 14px; cursor: pointer; text-align: left; font-size: 16px; font-weight: 800; border-bottom: 4px solid #1c1638; display: flex; align-items: center; gap: 12px; }
-        .nav-btn:hover { background: #2f2659; color: #fff; transform: translateY(-2px); }
-        .nav-btn.active-btn { background: #3b82f6; color: white; border-color: #1d4ed8; }
-        .btn-logout { background: #4a1525; border-color: #300a16; color: #ff8a8a; margin-top: auto; }
-        .btn-logout:hover { background: #cc1f44; color: white; }
+        /* Navigation Sidebar */
+        #sidebar { width: 280px; background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border-right: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; padding: 25px; gap: 12px; display: none; }
+        #sidebar h2 { text-align: center; color: #ffcc00; font-size: 24px; letter-spacing: 1px; margin-bottom: 5px; text-shadow: 0 4px 10px rgba(255, 204, 0, 0.3); }
+        .coin-widget { background: linear-gradient(135deg, #ffd700 0%, #ff8800 100%); padding: 15px; border-radius: 16px; text-align: center; font-weight: 900; font-size: 20px; color: #3a0066; box-shadow: 0 6px 20px rgba(255, 136, 0, 0.3); margin-bottom: 15px; }
+        .nav-btn { background: rgba(255, 255, 255, 0.04); color: #e0ccff; border: 1px solid rgba(255, 255, 255, 0.03); padding: 14px 20px; border-radius: 14px; cursor: pointer; text-align: left; font-size: 16px; font-weight: 700; }
+        .nav-btn:hover { background: #7700cc; color: white; transform: translateX(5px); box-shadow: 0 5px 15px rgba(119, 0, 204, 0.4); }
+        .nav-btn.active-btn { background: #ff007f; color: white; border-color: #ff007f; box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4); }
+        .logout-btn { background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.2); color: #ff5555; font-weight: bold; margin-top: auto; }
 
-        /* Workspace Core Windows */
-        #main-content { flex: 1; padding: 40px; overflow-y: auto; display: none; background: #120e24; }
-        .window { display: none; animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* Window Display Spaces */
+        #main-content { flex: 1; padding: 40px; overflow-y: auto; display: none; }
+        .window { display: none; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); height: 100%; animation: fadeIn 0.4s ease-out; }
         .window.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Multi-Account Gatekeeper Screen */
-        #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #2e1f5e 0%, #0c081c 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
-        .auth-box { background: #1c1538; padding: 40px; border-radius: 28px; border: 3px solid #2d235c; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 380px; display: flex; flex-direction: column; gap: 15px; }
-        .auth-title { font-size: 40px; color: #ffcc00; text-align: center; text-shadow: 0 5px 0 #331400; }
+        /* Auth Screen */
+        #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #250040 0%, #05000d 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        #auth-screen h1 { font-size: 48px; color: #ffcc00; text-shadow: 0 8px 20px rgba(255, 204, 0, 0.4); letter-spacing: 2px; }
+        .auth-container { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; width: 340px; }
         
-        input, select { padding: 16px 20px; border-radius: 14px; border: 3px solid #2d235c; background: #0f0a24; color: white; font-size: 16px; font-weight: 700; width: 100%; transition: all 0.2s; }
-        input:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59,130,246,0.3); }
+        input, select { padding: 14px 20px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.06); color: white; font-size: 16px; font-weight: 700; outline: none; text-align: center; width: 100%; }
+        input:focus { border-color: #ff007f; box-shadow: 0 0 15px rgba(255, 0, 127, 0.3); }
+        .btn-play { background: linear-gradient(135deg, #ff007f 0%, #7700cc 100%); color: white; border: none; font-weight: 900; font-family: 'Fredoka One', cursive; letter-spacing: 1px; padding: 14px 20px; border-radius: 14px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4); text-align: center; }
+        .btn-play:hover { transform: scale(1.05); }
 
-        .btn-action { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; font-weight: 900; font-family: 'Fredoka One', cursive; font-size: 18px; padding: 16px; border-radius: 16px; cursor: pointer; border-bottom: 5px solid #1d4ed8; text-align: center; box-shadow: 0 8px 20px rgba(37,99,235,0.3); }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(37,99,235,0.5); }
-        .btn-action:active { transform: translateY(2px); border-bottom-width: 1px; }
-
-        /* Automation HUD Components */
-        .toggle-shelf { display: flex; align-items: center; justify-content: space-between; max-width: 400px; background: #181330; padding: 15px 25px; border-radius: 18px; border: 2px solid #282147; margin-bottom: 30px; }
-        .switch { position: relative; display: inline-block; width: 56px; height: 30px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #241d45; transition: .3s; border-radius: 34px; border: 2px solid #382f63; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: #fff; transition: .3s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        input:checked + .slider { background-color: #3b82f6; border-color: #60a5fa; }
-        input:checked + .slider:before { transform: translateX(26px); }
-
-        /* Storefront Pack Modules */
-        .card-grid { display: flex; gap: 25px; flex-wrap: wrap; margin-top: 20px; padding-bottom: 30px; }
-        .pack-card { background: #181330; border: 3px solid #282147; border-bottom: 8px solid #282147; padding: 25px; border-radius: 24px; text-align: center; width: 250px; position: relative; }
-        .pack-card:hover { transform: translateY(-4px); border-color: #3b82f6; }
-        .pack-icon { font-size: 64px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); }
-        .pack-contents { background: #0f0a24; padding: 10px; border-radius: 12px; font-size: 12px; color: #8a82b0; margin: 12px 0; text-align: left; line-height: 1.5; height: 75px; overflow-y: auto; }
-
-        /* Immersive Custom Designed Cards */
-        .blook-card { width: 155px; height: 210px; border-radius: 20px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; position: relative; font-weight: 900; box-shadow: 0 10px 20px rgba(0,0,0,0.3); user-select: none; border-bottom: 6px solid rgba(0,0,0,0.3); }
-        .blook-art { font-size: 55px; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.4)); margin-top: 10px; }
-        .blook-name { font-size: 15px; text-align: center; color: white; font-weight: 900; letter-spacing: -0.5px; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .blook-count { position: absolute; top: -10px; right: -10px; background: #ff007f; color: white; font-size: 12px; padding: 4px 9px; border-radius: 20px; border: 2px solid #0c081c; font-weight: 900; box-shadow: 0 4px 10px rgba(255,0,127,0.4); }
+        /* Market Cards */
+        .card-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 25px; padding-bottom: 20px; }
+        .pack-card { background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.08); padding: 25px; border-radius: 20px; text-align: center; width: 220px; cursor: pointer; }
+        .pack-card:hover { transform: translateY(-8px); border-color: #ffcc00; box-shadow: 0 10px 20px rgba(255,204,0,0.15); }
         
-        /* Custom Color Theme Slates Per Rarity Tiers */
-        .tier-common { background: linear-gradient(135deg, #78909c 0%, #37474f 100%); border: 3px solid #b0bec5; }
-        .tier-rare { background: linear-gradient(135deg, #29b6f6 0%, #01579b 100%); border: 3px solid #81d4fa; }
-        .tier-epic { background: linear-gradient(135deg, #ab47bc 0%, #4a148c 100%); border: 3px solid #e1bee7; }
-        .tier-legendary { background: linear-gradient(135deg, #ffb300 0%, #ff6f00 100%); border: 3px solid #ffe082; animation: floatGlow 3s infinite alternate; }
-        .tier-chroma { background: linear-gradient(135deg, #ff007f 0%, #aa00ff 50%, #00e5ff 100%); border: 3px solid #fff; animation: chromaShift 2s infinite linear; }
+        /* Blook Bouncing Cards */
+        .blook-card { background: rgba(255, 255, 255, 0.04); border: 2px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 18px; text-align: center; width: 150px; font-weight: 900; font-size: 18px; animation: float 3s ease-in-out infinite; }
+        .blook-avatar { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); animation: subtleBounce 2s ease-in-out infinite alternate; }
         
-        @keyframes floatGlow { from { box-shadow: 0 5px 15px rgba(255,179,0,0.4); } to { box-shadow: 0 15px 30px rgba(255,179,0,0.8); transform: translateY(-3px); } }
-        @keyframes chromaShift { 0% { filter: hue-rotate(0deg); box-shadow: 0 5px 15px rgba(255,0,127,0.5); } 100% { filter: hue-rotate(360deg); box-shadow: 0 5px 15px rgba(255,0,127,0.5); } }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes subtleBounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
 
-        .badge-label { font-size: 10px; font-weight: 900; text-transform: uppercase; color: #fff; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.4); margin-bottom: 5px; }
+        /* Premium Rarity Badges */
+        .rarity { font-size: 11px; text-transform: uppercase; font-weight: 900; padding: 3px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
+        .common { background: #5e5e5e; color: white; }
+        .rare { background: #00bcff; color: white; }
+        .epic { background: #a020f0; color: white; }
+        .legendary { background: #ffaa00; color: white; box-shadow: 0 0 10px rgba(255,170,0,0.4); }
+        .chroma { background: linear-gradient(90deg, #ff007f, #7700cc, #00bcff); color: white; animation: rainbow 2s infinite linear; box-shadow: 0 0 15px rgba(255,0,127,0.5); }
+        @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        /* Integrated Recycler System Elements */
-        .sell-tray { display: flex; gap: 8px; margin-top: 5px; width: 100%; }
-        .sell-btn { flex: 1; padding: 5px; font-size: 11px; font-weight: 900; border: none; border-radius: 8px; cursor: pointer; color: white; border-bottom: 2px solid rgba(0,0,0,0.2); }
-        .btn-sell-one { background: #ef5350; } .btn-sell-one:hover { background: #d32f2f; }
-        .btn-sell-all { background: #ab47bc; } .btn-sell-all:hover { background: #7b1fa2; }
+        /* CINEMATIC UNBOXING SCREEN OVERLAY */
+        #unbox-overlay { position: fixed; inset: 0; background: rgba(10, 0, 20, 0.95); z-index: 500; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        
+        .animated-pack { width: 180px; height: 240px; background: linear-gradient(135deg, #7700cc 0%, #3a0066 100%); border-radius: 16px; border: 4px solid #ffcc00; display: flex; justify-content: center; align-items: center; font-size: 80px; box-shadow: 0 20px 50px rgba(119,0,204,0.5); position: relative; cursor: pointer; }
+        
+        /* Box Opening Shake and Burst Animations */
+        .shake-animation { animation: packShake 0.5s linear infinite; }
+        @keyframes packShake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-8deg) scale(1.05); }
+            40% { transform: rotate(6deg) scale(1.05); }
+            60% { transform: rotate(-6deg) scale(1.05); }
+            80% { transform: rotate(8deg) scale(1.05); }
+        }
 
-        /* Chat Rooms Components */
-        #chat-canvas { height: 60vh; border: 3px solid #282147; overflow-y: auto; padding: 20px; margin-bottom: 20px; border-radius: 20px; background: #0b0717; }
-        .msg-bubble { margin-bottom: 12px; font-size: 15px; background: #1c1635; padding: 10px 16px; border-radius: 14px; width: fit-content; max-width: 75%; border-left: 4px solid #3b82f6; }
-        .sender-admin { border-left-color: #ff0055 !important; background: rgba(255, 0, 85, 0.05); }
-        .sender-mod { border-left-color: #00bfff !important; background: rgba(0, 191, 255, 0.05); }
+        .burst-animation { animation: packBurst 0.4s ease-out forwards; }
+        @keyframes packBurst {
+            0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+            50% { transform: scale(1.4); opacity: 0.8; filter: brightness(3); }
+            100% { transform: scale(0); opacity: 0; }
+        }
 
-        /* Owner Command Dashboard Terminal */
-        #admin-terminal { border: 3px dashed #ff0055; background: rgba(255, 0, 85, 0.03); margin-top: 40px; padding: 25px; border-radius: 24px; display: none; }
-        #log-shelf { background: #070512; border-radius: 14px; padding: 15px; margin-top: 20px; max-height: 180px; overflow-y: auto; font-family: monospace; font-size: 13px; border: 1px solid #241d45; color: #a199c7; }
+        /* Final Unboxed Reward Card Reveal Card */
+        #reward-display-card { width: 220px; height: 300px; background: rgba(255, 255, 255, 0.05); border: 4px solid white; border-radius: 24px; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 15px; text-align: center; animation: rewardReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; box-shadow: 0 0 50px rgba(255,255,255,0.2); }
+        @keyframes rewardReveal {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        #reward-emoji { font-size: 90px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); }
+        #reward-name { font-size: 24px; font-weight: 900; color: white; }
+
+        /* Active Chat & Logs Layout */
+        #chat-box { height: 65%; border: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 20px; margin-bottom: 15px; border-radius: 16px; background: rgba(0, 0, 0, 0.2); }
+        .chat-line { margin-bottom: 10px; font-size: 15px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; width: fit-content; }
+        .tag-admin { color: #ff0055; font-weight: 900; text-shadow: 0 0 8px rgba(255,0,85,0.5); }
+        .tag-mod { color: #00bfff; font-weight: 900; }
+        #admin-panel { border: 2px dashed #ff0055; background: rgba(255, 0, 85, 0.05); margin-top: 30px; padding: 20px; border-radius: 18px; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Account Authenticator Portal -->
+    <!-- Cinematic Overlay Screen Module for Pack Openings -->
+    <div id="unbox-overlay">
+        <div id="animated-pack-wrapper" class="animated-pack" onclick="triggerBurstSequence()">🎁</div>
+        <div id="reward-display-card">
+            <div id="reward-emoji">🔮</div>
+            <div id="reward-name">Blook Item</div>
+            <div><span id="reward-badge" class="rarity common">Common</span></div>
+            <button class="btn-play" style="margin-top: 15px; padding: 10px 20px; font-size:14px;" onclick="closeUnboxOverlay()">COLLECT</button>
+        </div>
+    </div>
+
+    <!-- Working Authenticator Gateway Interface -->
     <div id="auth-screen">
-        <h1 class="auth-title">BLOOKET DELUXE</h1>
-        <div class="auth-box">
-            <input type="text" id="username-in" placeholder="Username / Handle...">
-            <input type="password" id="password-in" placeholder="Password Access Key...">
-            <button class="btn-action" onclick="runAuthorization('login')">Sign In</button>
-            <button class="btn-action" onclick="runAuthorization('signup')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #047857;">Create Free Vault</button>
+        <h1>BLOOK LABS V5</h1>
+        <div class="auth-container">
+            <input type="text" id="username-in" placeholder="Username...">
+            <input type="password" id="password-in" placeholder="Password...">
+            <button class="btn-play" onclick="handleAuth('login')">Log In</button>
+            <button class="btn-play" onclick="handleAuth('signup')" style="background: #00cc66;">Create Free Account</button>
         </div>
     </div>
 
-    <!-- Layout Side Menu Frame -->
+    <!-- Navigation Bar Panels -->
     <div id="sidebar">
-        <div class="brand-logo">Blooket V5</div>
-        <div class="profile-card">
-            <div class="avatar-frame" id="avatar-icon">📦</div>
-            <div class="profile-info">
-                <div class="profile-name" id="user-display">Loading...</div>
-                <div id="user-badge-slot"></div>
-            </div>
-        </div>
-        <div class="coin-balance">🪙 <span id="coin-count">0</span></div>
-        
-        <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Pack Marketplace</button>
+        <h2 id="user-display">GIO 👑</h2>
+        <div class="coin-widget">🪙 <span id="coin-count">0</span></div>
+        <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Market Packs</button>
         <button class="nav-btn" id="btn-blooks" onclick="setView('blooks')">🎒 My Collection</button>
-        <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Daily Wheel</button>
-        <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Live Chat Room</button>
-        <button class="nav-btn btn-logout" onclick="logoutSession()">🚪 Exit System</button>
+        <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Reward Wheel</button>
+        <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Lobby Chat</button>
+        <button class="nav-btn logout-btn" onclick="logoutAccount()">🚪 Log Out</button>
     </div>
 
-    <!-- Primary App Content Window Panels -->
+    <!-- Container Content Windows -->
     <div id="main-content">
-        <!-- Marketplace Section -->
+        <!-- Shop Panel Workspace -->
         <div id="market" class="window active">
-            <h1 style="font-size: 36px; margin-bottom: 5px; color: #ffcc00;">Blook Market</h1>
-            <p style="color: #8a82b0; margin-bottom: 25px;">Acquire premium mystery tier boxes to build up your inventory value.</p>
-            
-            <div class="toggle-shelf">
-                <div>
-                    <div style="font-weight: 900; font-size: 16px; color: #ff007f;">⚡ Instant Auto-Opener</div>
-                    <div style="font-size: 12px; color: #72699e;">Unboxes selected items instantly at 5 packs per second.</div>
-                </div>
-                <label class="switch"><input type="checkbox" id="auto-open-toggle" onchange="toggleAutoBox()"><span class="slider"></span></label>
-            </div>
-
+            <h1 style="color: #ffcc00; font-size: 32px;">Blook Market</h1>
+            <p style="color: #b399ff; margin-bottom: 20px;">Open premium animation boxes instantly</p>
             <div class="card-grid" id="packs-container"></div>
-            <div id="log-shelf" style="display:none;"><div style="color:#ffcc00; font-weight:bold; margin-bottom:8px;">📋 Mass Unbox Output Stream:</div><div id="log-content"></div></div>
         </div>
 
-        <!-- Inventory Tracking Collection Screen -->
+        <!-- Inventory List -->
         <div id="blooks" class="window">
-            <h1 style="font-size: 36px; margin-bottom: 5px; color: #ff007f;">My Collection</h1>
-            <p style="color: #8a82b0; margin-bottom: 25px;">Track your asset distribution percentages and recycle extra duplicates.</p>
+            <h1 style="color: #ff007f; font-size: 32px; margin-bottom: 20px;">My Blooks</h1>
             <div class="card-grid" id="blooks-container"></div>
         </div>
 
-        <!-- Reward Multipliers Wheel Window -->
-        <div id="wheel" class="window" style="text-align: center; padding-top: 40px;">
-            <h1 style="font-size: 36px; color: #00e5ff;">Hourly Rewards Multiplier</h1>
-            <p style="color: #8a82b0; margin-bottom: 40px;">Claim rolling cash tokens grants directly inside your profile vault.</p>
-            <div style="font-size: 120px; margin-bottom: 30px; animation: floatGlow 2s infinite alternate;">🎡</div>
-            <button class="btn-action" onclick="spinBonusWheel()" style="padding: 16px 60px;">SPIN FOR TOKENS</button>
+        <!-- Bonus System -->
+        <div id="wheel" class="window" style="text-align: center;">
+            <h1 style="color: #00bcff; font-size: 32px;">Hourly Cash Wheel</h1>
+            <div style="font-size: 100px; margin: 30px 0; animation: subtleBounce 2s ease-in-out infinite alternate;">🎡</div>
+            <button class="btn-play" onclick="spinWheel()" style="padding: 15px 40px; font-size: 20px;">SPIN THE WHEEL</button>
         </div>
 
-        <!-- Direct Live Chat Frame Section -->
+        <!-- Messaging Panels -->
         <div id="chat" class="window">
-            <h1 style="font-size: 36px; color: #10b981; margin-bottom: 5px;">Lobby Chat</h1>
-            <p style="color: #8a82b0; margin-bottom: 20px;">Live community network board simulation</p>
-            <div id="chat-canvas"></div>
-            <div style="display: flex; gap: 12px;">
-                <input type="text" id="chat-msg" style="flex: 1;" placeholder="Express yourself down here...">
-                <button class="btn-action" onclick="pushChatStream()" style="padding: 0 35px;">SEND</button>
+            <h1 style="color: #00cc66; font-size: 32px; margin-bottom: 5px;">Lobby Chat</h1>
+            <div id="chat-box"></div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="chat-msg" style="width:75%;" placeholder="Say hello to the workspace screen logs...">
+                <button class="btn-play" onclick="sendChat()">Send</button>
             </div>
         </div>
 
-        <!-- Master Owner Permission Console -->
-        <div id="admin-terminal">
-            <h2 style="color:#ff0055; margin-bottom: 15px; font-size: 22px;">👑 God-Mode Rank & Asset Core System Console</h2>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 15px;">
-                <input type="text" id="adm-target-user" placeholder="Target Player Username..." style="width: 250px;">
-                <select id="adm-role-select" style="width: 200px;">
-                    <option value="admin">Promote to [ADMIN]</option>
-                    <option value="mod">Promote to [MODERATOR]</option>
-                    <option value="user">Demote to [PLAYER TIER]</option>
+        <!-- Secret System Console Managed Exclusively by Admins -->
+        <div id="admin-panel">
+            <h2 style="color:#ff0055; margin-bottom: 15px;">👑 Admin Power Console Panel</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                <input type="text" id="adm-target-user" placeholder="Target Username" style="width: 220px;">
+                <select id="adm-role-select" style="width: 180px;">
+                    <option value="admin">Give Admin Rank</option>
+                    <option value="mod">Give Moderator Rank</option>
+                    <option value="user">Demote Player</option>
                 </select>
-                <button class="btn-action" onclick="updatePermissions()" style="background: #ff0055; border-color: #cc0044; padding: 12px 25px; font-size: 15px;">EXECUTE PERMISSION PATCH</button>
+                <button class="btn-play" onclick="modifyRole()" style="background: #ff0055;">Apply Update</button>
             </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                <input type="text" id="adm-blook" placeholder="Inject Custom Item Name..." style="width: 250px;">
-                <input type="number" id="adm-coins" placeholder="Inject Token Quantity Count..." style="width: 200px;">
-                <button class="btn-action" onclick="injectAssets()" style="background: #3a2e75; border-color: #261e52; padding: 12px 25px; font-size: 15px;">INJECT ASSET PACKAGE</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="text" id="adm-blook" placeholder="Gift Blook Item Name" style="width: 220px;">
+                <input type="number" id="adm-coins" placeholder="Tokens Count" style="width: 180px;">
+                <button class="btn-play" onclick="runAdminInjection()" style="background: #333;">Inject Items / Coins</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Full Dataset Mapping Custom Visual Artifact Profiles Per Tier
-        const BLOOK_REGISTRY = {
-            'Knight': { emoji: '⚔️', rarity: 'common', value: 5 },
-            'Queen': { emoji: '👸', rarity: 'rare', value: 15 },
-            'King': { emoji: '👑', rarity: 'rare', value: 15 },
-            'Wizard': { emoji: '🧙', rarity: 'epic', value: 40 },
-            'Dragon': { emoji: '🐉', rarity: 'legendary', value: 100 },
-            'Meteor': { emoji: '☄️', rarity: 'common', value: 5 },
-            'Astronaut': { emoji: '👨‍🚀', rarity: 'rare', value: 15 },
-            'Alien': { emoji: '👽', rarity: 'rare', value: 15 },
-            'UFO': { emoji: '🛸', rarity: 'epic', value: 40 },
-            'Star': { emoji: '⭐', rarity: 'legendary', value: 100 },
-            'Ninja': { emoji: '🥷', rarity: 'common', value: 5 },
-            'Samurai': { emoji: '👺', rarity: 'rare', value: 15 },
-            'Mech Robot': { emoji: '🤖', rarity: 'epic', value: 40 },
-            'Titan Creature': { emoji: '👹', rarity: 'legendary', value: 100 },
-            'Rainbow Slime': { emoji: '🌈', rarity: 'chroma', value: 250 },
-            'Neon Cat': { emoji: '🐱', rarity: 'chroma', value: 250 },
-            'Glitch Entity': { emoji: '👾', rarity: 'chroma', value: 250 }
+        const BLOOK_DETAILS = {
+            'Knight': { emoji: '⚔️', rarity: 'common' }, 'Queen': { emoji: '👸', rarity: 'rare' },
+            'King': { emoji: '👑', rarity: 'rare' }, 'Wizard': { emoji: '🧙', rarity: 'epic' },
+            'Dragon': { emoji: '🐉', rarity: 'legendary' }, 'Meteor': { emoji: '☄️', rarity: 'common' },
+            'Astronaut': { emoji: '👨‍🚀', rarity: 'rare' }, 'Alien': { emoji: '👽', rarity: 'rare' },
+            'UFO': { emoji: '🛸', rarity: 'epic' }, 'Star': { emoji: '⭐', rarity: 'legendary' },
+            'Ninja': { emoji: '🥷', rarity: 'common' }, 'Samurai': { emoji: '👺', rarity: 'rare' },
+            'Mech Robot': { emoji: '🤖', rarity: 'epic' }, 'Titan Creature': { emoji: '👹', rarity: 'legendary' },
+            'Rainbow Slime': { emoji: '🌈', rarity: 'chroma' }, 'Neon Cat': { emoji: '🐱', rarity: 'chroma' }
         };
 
-        const BOX_PACKS = {
-            Medieval: { icon: '🏰', cost: 20, items: ['Knight', 'King', 'Queen', 'Wizard', 'Dragon'] },
-            Space: { icon: '🚀', cost: 35, items: ['Meteor', 'Astronaut', 'Alien', 'UFO', 'Star'] },
-            Anime: { icon: '🏮', cost: 50, items: ['Ninja', 'Samurai', 'Mech Robot', 'Titan Creature'] },
-            Chroma: { icon: '💎', cost: 200, items: ['Rainbow Slime', 'Neon Cat', 'Glitch Entity'] }
+        const PACKS = {
+            Medieval: { cost: 20, emoji: '🛡️', blooks: ['Knight', 'King', 'Queen', 'Wizard', 'Dragon'] },
+            Space: { cost: 35, emoji: '🚀', blooks: ['Meteor', 'Astronaut', 'Alien', 'UFO', 'Star'] },
+            Anime: { cost: 50, emoji: '⛩️', blooks: ['Ninja', 'Samurai', 'Mech Robot', 'Titan Creature'] },
+            Chroma: { cost: 150, emoji: '✨', blooks: ['Rainbow Slime', 'Neon Cat'] }
         };
 
         let currentUser = null;
-        let massBoxLoop = null;
-        let targetPackName = null;
+        let selectedPackToOpen = null;
 
-        const chatBotScripts = [
-            "Who has a spare legendary Star Blook?", "Gio's update to the auto-opener makes mass-opening so much faster!",
-            "Just cracked a Chroma Tier pull!", "Is anyone grinding the Medieval box right now?",
-            "Moderators are actively cleaning the text chat strings.", "Loving the dark dashboard colors here."
-        ];
+        function handleAuth(type) {
+            const username = document.getElementById('username-in').value.trim();
+            const password = document.getElementById('password-in').value.trim();
+            if (!username || !password) return alert("Please type your username and password!");
 
-        // Advanced Multi-Account Profile State Controller
-        function runAuthorization(mode) {
-            const user = document.getElementById('username-in').value.trim();
-            const pass = document.getElementById('password-in').value.trim();
+            const database = JSON.parse(localStorage.getItem('blook_account_db') || "{}");
 
-            if (!user || !pass) return alert("All access vault entry credentials are required!");
-
-            const storageDB = JSON.parse(localStorage.getItem('blook_master_db_v5') || "{}");
-
-            // Master Override Recovery Code Mechanics
-            if (pass === 'RESETGIO') {
-                storageDB[user.toLowerCase()] = {
-                    username: user, password: "GIO", coins: 1000000,
-                    inventory: { 'Dragon': 1 }, lastWheel: 0, rank: 'admin'
+            if (type === 'signup') {
+                if (database[username.toLowerCase()]) return alert("This username is already taken!");
+                database[username.toLowerCase()] = {
+                    username: username, password: password, coins: 200, blooks: [], lastWheel: 0,
+                    rank: (username.toLowerCase() === 'gio') ? 'admin' : 'user'
                 };
-                localStorage.setItem('blook_master_db_v5', JSON.stringify(storageDB));
-                alert("Master Override triggered. Log in with password 'GIO' to open your Admin Profile.");
+                localStorage.setItem('blook_account_db', JSON.stringify(database));
+                alert("Account created! Click Log In to enter.");
                 return;
             }
 
-            if (mode === 'signup') {
-                if (storageDB[user.toLowerCase()]) return alert("Account tag registry match found! Choose a different username.");
-                
-                storageDB[user.toLowerCase()] = {
-                    username: user, password: pass, coins: 250,
-                    inventory: {}, lastWheel: 0,
-                    rank: (user.toLowerCase() === 'gio') ? 'admin' : 'user'
-                };
-                localStorage.setItem('blook_master_db_v5', JSON.stringify(storageDB));
-                alert("Vault Account successfully generated! Click Sign In to open the workspace.");
-                return;
-            }
-
-            if (mode === 'login') {
-                const profile = storageDB[user.toLowerCase()];
-                if (!profile || profile.password !== pass) return alert("Invalid credentials or matching records were not found inside the database!");
-                
-                currentUser = profile;
-                syncMainInterface();
+            if (type === 'login') {
+                const userRecord = database[username.toLowerCase()];
+                if (!userRecord || userRecord.password !== password) return alert("Wrong username or password!");
+                currentUser = userRecord;
+                launchDashboard();
             }
         }
 
-        function syncMainInterface() {
+        function launchDashboard() {
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-content').style.display = 'block';
-            
-            evaluateAdminLayout();
+            checkAdminVisibility();
             updateUI();
-            generateMarketplaceDOM();
-            engageChatBots();
+            renderPacks();
         }
 
-        function evaluateAdminLayout() {
+        function checkAdminVisibility() {
             if (currentUser.rank === 'admin' || currentUser.rank === 'mod') {
-                document.getElementById('admin-terminal').style.display = 'block';
+                document.getElementById('admin-panel').style.display = 'block';
             } else {
-                document.getElementById('admin-terminal').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'none';
             }
         }
 
-        function pushDatabaseUpdate() {
-            const storageDB = JSON.parse(localStorage.getItem('blook_master_db_v5') || "{}");
-            storageDB[currentUser.username.toLowerCase()] = currentUser;
-            localStorage.setItem('blook_master_db_v5', JSON.stringify(storageDB));
+        function saveUserData() {
+            const database = JSON.parse(localStorage.getItem('blook_account_db') || "{}");
+            database[currentUser.username.toLowerCase()] = currentUser;
+            localStorage.setItem('blook_account_db', JSON.stringify(database));
         }
 
-        function logoutSession() {
-            clearInterval(massBoxLoop);
+        function logoutAccount() {
             currentUser = null;
             document.getElementById('sidebar').style.display = 'none';
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'flex';
-            document.getElementById('username-in').value = '';
-            document.getElementById('password-in').value = '';
         }
 
-        // Master Permissions Promotion Mechanism
-        function updatePermissions() {
-            const target = document.getElementById('adm-target-user').value.trim().toLowerCase();
-            const rank = document.getElementById('adm-role-select').value;
-            const storageDB = JSON.parse(localStorage.getItem('blook_master_db_v5') || "{}");
+        function modifyRole() {
+            const targetName = document.getElementById('adm-target-user').value.trim().toLowerCase();
+            const selectedRole = document.getElementById('adm-role-select').value;
+            const database = JSON.parse(localStorage.getItem('blook_account_db') || "{}");
 
-            if (!storageDB[target]) return alert("Target username profile match missing from data arrays!");
-
-            storageDB[target].rank = rank;
-            localStorage.setItem('blook_master_db_v5', JSON.stringify(storageDB));
-            alert(`Rank applied successfully to ${storageDB[target].username}: [${rank.toUpperCase()}]`);
+            if (!database[targetName]) return alert("Target player username not found!");
+            database[targetName].rank = selectedRole;
+            localStorage.setItem('blook_account_db', JSON.stringify(database));
+            alert(`Updated ${database[targetName].username}'s permissions to: ${selectedRole}`);
             
-            if (currentUser.username.toLowerCase() === target) {
-                currentUser.rank = rank;
-                evaluateAdminLayout();
+            if (currentUser.username.toLowerCase() === targetName) {
+                currentUser.rank = selectedRole;
+                checkAdminVisibility();
                 updateUI();
             }
         }
 
         function updateUI() {
-            let badgeHTML = '<span class="role-tag" style="background:#5e5296;">Player</span>';
-            if(currentUser.rank === 'admin') badgeHTML = '<span class="role-tag role-admin">👑 Admin</span>';
-            if(currentUser.rank === 'mod') badgeHTML = '<span class="role-tag role-mod">⭐ Mod</span>';
+            let rankTag = '';
+            if(currentUser.rank === 'admin') rankTag = ' <span class="tag-admin">[👑 ADMIN]</span>';
+            if(currentUser.rank === 'mod') rankTag = ' <span class="tag-mod">[⭐ MOD]</span>';
 
-            document.getElementById('user-display').innerText = currentUser.username;
-            document.getElementById('user-badge-slot').innerHTML = badgeHTML;
-            document.getElementById('coin-count').innerText = currentUser.coins.toLocaleString();
+            document.getElementById('user-display').innerHTML = currentUser.username + rankTag;
+            document.getElementById('coin-count').innerText = currentUser.coins;
             
-            // Generate inventory visuals
-            const invContainer = document.getElementById('blooks-container');
-            invContainer.innerHTML = '';
+            const inv = document.getElementById('blooks-container');
+            inv.innerHTML = '';
             
-            let assetFound = false;
-            for (let bName in currentUser.inventory) {
-                const totalOwned = currentUser.inventory[bName];
-                if (totalOwned <= 0) continue;
-                assetFound = true;
+            currentUser.blooks.forEach(b => {
+                const item = BLOOK_DETAILS[b] || { emoji: '📦', rarity: 'common' };
+                inv.innerHTML += `
+                    <div class="blook-card">
+                        <div class="blook-avatar">${item.emoji}</div>
+                        <div style="font-size:14px;">${b}</div>
+                        <span class="rarity ${item.rarity}">${item.rarity}</span>
+                    </div>`;
+            });
+            saveUserData();
+        }
 
-                const data = BLOOK_REGISTRY[bName] || { emoji: '📦', rarity: 'common', value: 5 };
-                invContainer.innerHTML += `
-                    <div class="blook-card tier-${data.rarity}">
-                        <div class="blook-count">x${totalOwned}</div>
-                        <div class="badge-label">${data.rarity}</div>
-                        <div class="blook-art">${data.emoji}</div>
-                        <div class="blook-name">${bName}</div>
-                        <div class="sell-tray">
-                            <button class="sell-btn btn-sell-one" onclick="recycleBlook('${bName}', 1)">Sell 1</button>
-                            <button class="sell-btn btn-sell-all" onclick="recycleBlook('${bName}', ${totalOwned})">All</button>
-                        </div>
+        function setView(id) {
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-btn'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active-btn');
+        }
+
+        function renderPacks() {
+            const container = document.getElementById('packs-container');
+            container.innerHTML = '';
+            for (let name in PACKS) {
+                container.innerHTML += `
+                    <div class="pack-card" onclick="openPackCinematic('${name}')">
+                        <div style="font-size: 50px; margin-bottom: 10px;">${PACKS[name].emoji}</div>
+                        <h3 style="font-size: 20px; margin-bottom: 5px;">${name} Pack</h3>
+                        <p style="color:#ffd700; font-weight:900;">🪙 ${PACKS[name].cost}</p>
                     </div>`;
             }
+        }
 
-            if(!assetFound) {
-                invContainer.innerHTML = `<p style="color: rgba(255,255,255,0.3); font-style: italic; font-size:15px;">Your inventory is empty. Purchase boxes inside the market marketplace tab!</p>`;
-            }
+        /* DYNAMIC BLOOKET-STYLE ANIMATION ENGINE INTERFACES */
+        function openPackCinematic(name) {
+            const pack = PACKS[name];
+            if (currentUser.coins < pack.cost) return alert('Not enough tokens!');
             
-            // Sync current primary profile visual avatar icon block
-            const currentKeys = Object.keys(currentUser.inventory).filter(k => currentUser.inventory[k] > 0);
-            if(currentKeys.length > 0) {
-                document.getElementById('avatar-icon').innerText = BLOOK_REGISTRY[currentKeys[currentKeys
+            currentUser.coins -= pack.cost;
+            selectedPackToOpen = name;
+            updateUI();
+
+            // Setup overlay display fields
+            document.getElementById('reward-display-card').style.display = 'none';
+            const packWrapper = document.getElementById('animated-pack-wrapper');
+            packWrapper.style.display = 'flex';
+            packWrapper.className = 'animated-pack shake-animation';
+            packWrapper.innerText = pack.emoji;
+
+            document.getElementById('unbox-overlay').style.display = 'flex';
+        }
+
+        function triggerBurstSequence() {
+            const packWrapper = document.getElementById('animated-pack-wrapper');
+            packWrapper.className = 'animated-pack burst-animation';
+
+            setTimeout(() => {
+                packWrapper.style.display = 'none';
+                
+                // Roll reward data engine drops
+                const pack = PACKS[selectedPackToOpen];
+                const reward = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
+                currentUser.blooks.push(reward);
+                updateUI();
+
+                // Hydrate presentation cards configuration tags
+                const item = BLOOK_DETAILS[reward] || { emoji: '📦', rarity: 'common' };
+                document.getElementById('reward-emoji').innerText = item.emoji;
+                document.getElementById('reward-name').innerText = reward;
+                
+                const badge = document.getElementById('reward-badge');
+                badge.innerText = item.rarity;
+                badge.className = `rarity ${item.rarity}`;
+
+                // Inject special colored glows based on unboxed tier rarities
+                const card = document.getElementById('reward-display-card');
+                card.style.display = 'flex';
+                if (item.rarity === 'chroma') card.style.borderColor = '#ff007f';
+                else if (item.rarity === 'legendary') card.style.borderColor = '#ffaa00';
+                else if (item.rarity === 'epic') card.style.borderColor = '#a020f0';
+                else card.style.borderColor = 'white';
+
+            }, 400);
+        }
+
+        function closeUnboxOverlay() {
+            document.getElementById('unbox-overlay').style.display = 'none';
+            selectedPackToOpen = null;
+        }
+
+        function spinWheel() {
+            const now = Date.now();
+            if (now - currentUser.lastWheel < 3600000) {
+                const remaining = Math.ceil((3600000 - (now - currentUser.lastWheel)) / 60000);
+                return alert(`Wheel cooling down! Wait ${remaining} minutes.`);
+            }
+            const reward = Math.floor(Math.random() * 200) + 100;
+            currentUser.coins += reward;
+            currentUser.lastWheel = now;
+            updateUI();
+            alert(`💰 Success! You scored +${reward} tokens!`);
+        }
+
+        function sendChat() {
+            const inp = document.getElementById('chat-msg');
+            if (!inp.value.trim()) return;
+            let tagStr = currentUser.username;
+            if(currentUser.rank === 'admin') tagStr = `<span class="tag-admin">[👑 ADMIN] ${currentUser.username}</span>`;
+            if(currentUser.rank === 'mod') tagStr = `<span class="tag-mod">[⭐ MOD] ${currentUser.username}</span>`;
+            
+            const box = document.getElementById('chat-box');
+            box.innerHTML += `<div class="chat-line"><b>${tagStr}:</b> ${inp.value.trim()}</div>`;
+            box.scrollTop = box.scrollHeight;
+            inp.value = '';
+        }
+
+        function runAdminInjection() {
+            const blookName = document.getElementById('adm-blook').value.trim();
+            const coinAmt = document.getElementById('adm-coins').value;
+            if (blookName) currentUser.blooks.push(blookName);
+            if (coinAmt) currentUser.coins += parseInt(coinAmt);
+            updateUI();
+            alert("Assets injected!");
+        }
+    </script>
+</body>
+</html>
