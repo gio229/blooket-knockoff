@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blooket Deluxe Labs - Fusion Merge & Packs Update</title>
+    <title>Blooket Deluxe Labs - Fusion & Drop Rates Edition</title>
     <style>
         @import url('https://googleapis.com');
 
@@ -11,7 +11,7 @@
         h1, h2, h3, .brand { font-family: 'Fredoka One', cursive; }
         body { display: flex; background: linear-gradient(135deg, #0f001e 0%, #05000d 100%); color: #ffffff; height: 100vh; overflow: hidden; }
         
-        /* Sidebar System */
+        /* Sidebar Navigation UI */
         #sidebar { width: 280px; background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border-right: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; padding: 25px; gap: 12px; display: none; }
         #sidebar h2 { text-align: center; color: #ffcc00; font-size: 24px; letter-spacing: 1px; margin-bottom: 5px; text-shadow: 0 4px 10px rgba(255, 204, 0, 0.3); }
         .coin-widget { background: linear-gradient(135deg, #ffd700 0%, #ff8800 100%); padding: 15px; border-radius: 16px; text-align: center; font-weight: 900; font-size: 20px; color: #3a0066; box-shadow: 0 6px 20px rgba(255, 136, 0, 0.3); margin-bottom: 15px; }
@@ -20,13 +20,13 @@
         .nav-btn.active-btn { background: #ff007f; color: white; border-color: #ff007f; box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4); }
         .logout-btn { background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.2); color: #ff5555; font-weight: bold; margin-top: auto; }
 
-        /* Window Display Spaces */
+        /* Window Display Layers */
         #main-content { flex: 1; padding: 40px; overflow-y: auto; display: none; }
-        .window { display: none; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); height: 100%; animation: fadeIn 0.4s ease-out; }
+        .window { display: none; background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); min-height: 100%; animation: fadeIn 0.4s ease-out; }
         .window.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Authentication Layout */
+        /* Safe Fail-Proof Authentication Forms System */
         #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #250040 0%, #05000d 100%); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
         #auth-screen h1 { font-size: 48px; color: #ffcc00; text-shadow: 0 8px 20px rgba(255, 204, 0, 0.4); letter-spacing: 2px; }
         .auth-container { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; width: 340px; }
@@ -36,7 +36,7 @@
         .btn-play { background: linear-gradient(135deg, #ff007f 0%, #7700cc 100%); color: white; border: none; font-weight: 900; font-family: 'Fredoka One', cursive; letter-spacing: 1px; padding: 14px 20px; border-radius: 14px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4); text-align: center; }
         .btn-play:hover { transform: scale(1.05); }
 
-        /* Market Cards & Rates Layout */
+        /* Grid Layouts & Card Matrices */
         .card-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 25px; padding-bottom: 20px; }
         .pack-card { background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 20px; text-align: center; width: 230px; cursor: pointer; }
         .pack-card:hover { transform: translateY(-8px); border-color: #ffcc00; box-shadow: 0 10px 20px rgba(255,204,0,0.15); }
@@ -44,12 +44,16 @@
         .rates-list { margin-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px; text-align: left; font-size: 12px; color: #b399ff; }
         .rate-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
-        /* Blook Rendering */
         .blook-card { background: rgba(255, 255, 255, 0.04); border: 2px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 18px; text-align: center; width: 150px; font-weight: 900; font-size: 18px; position: relative; }
         .blook-avatar { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.3)); }
-        .dupe-badge { position: absolute; top: -10px; right: -10px; background: #ff007f; color: white; font-size: 12px; padding: 4px 8px; border-radius: 50%; font-weight: 900; border: 2px solid #0f001e; }
+        .dupe-badge { position: absolute; top: -10px; right: -10px; background: #ff007f; color: white; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: 900; box-shadow: 0 4px 10px rgba(255,0,127,0.4); }
 
-        /* Premium Rarity Tags */
+        /* Fusion Forge Interfaces */
+        .fusion-slot { width: 160px; height: 200px; border: 3px dashed rgba(255, 255, 255, 0.15); border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 10px; }
+        .fusion-slot.filled { border-style: solid; border-color: #00bcff; background: rgba(0, 188, 255, 0.05); }
+        .forge-select-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-top: 5px; }
+
+        /* Premium Rarity Design Classes */
         .rarity { font-size: 11px; text-transform: uppercase; font-weight: 900; padding: 3px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
         .common { background: #5e5e5e; color: white; }
         .rare { background: #00bcff; color: white; }
@@ -58,27 +62,20 @@
         .chroma { background: linear-gradient(90deg, #ff007f, #7700cc, #00bcff); color: white; animation: rainbow 2s infinite linear; box-shadow: 0 0 15px rgba(255,0,127,0.5); }
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        /* Fusion Merge Grid Elements */
-        .merge-box-grid { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
-        .merge-slot { width: 120px; height: 160px; border: 3px dashed rgba(255,255,255,0.2); border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.01); font-size: 14px; color: rgba(255,255,255,0.4); font-weight: bold; position: relative; }
-        .merge-slot.filled { border-style: solid; border-color: #ffaa00; background: rgba(255,170,0,0.05); color: #fff; }
-        .remove-slot-btn { position: absolute; top: 5px; right: 5px; background: #ff3333; color: white; border: none; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        /* PACK UNBOX OVERLAY DISPLAY GRAPHICS */
+        /* PACK OPEN LAYOVER SYSTEM */
         #unbox-overlay { position: fixed; inset: 0; background: rgba(10, 0, 20, 0.95); z-index: 500; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .animated-pack { width: 180px; height: 240px; background: linear-gradient(135deg, #7700cc 0%, #3a0066 100%); border-radius: 16px; border: 4px solid #ffcc00; display: flex; justify-content: center; align-items: center; font-size: 80px; box-shadow: 0 20px 50px rgba(119,0,204,0.5); position: relative; cursor: pointer; }
-        
+        .animated-pack { width: 180px; height: 240px; background: linear-gradient(135deg, #7700cc 0%, #3a0066 100%); border-radius: 16px; border: 4px solid #ffcc00; display: flex; justify-content: center; align-items: center; font-size: 80px; box-shadow: 0 20px 50px rgba(119,0,204,0.5); cursor: pointer; }
         .shake-animation { animation: packShake 0.5s linear infinite; }
         @keyframes packShake { 0%, 100% { transform: rotate(0deg) scale(1); } 20% { transform: rotate(-8deg) scale(1.05); } 40% { transform: rotate(6deg) scale(1.05); } 60% { transform: rotate(-6deg) scale(1.05); } 80% { transform: rotate(8deg) scale(1.05); } }
         .burst-animation { animation: packBurst 0.4s ease-out forwards; }
         @keyframes packBurst { 0% { transform: scale(1); opacity: 1; filter: brightness(1); } 50% { transform: scale(1.4); opacity: 0.8; filter: brightness(3); } 100% { transform: scale(0); opacity: 0; } }
 
-        #reward-display-card { width: 220px; height: 300px; background: rgba(255, 255, 255, 0.05); border: 4px solid white; border-radius: 24px; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 15px; text-align: center; animation: rewardReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; box-shadow: 0 0 50px rgba(255,255,255,0.2); }
+        #reward-display-card { width: 220px; height: 300px; background: rgba(255, 255, 255, 0.05); border: 4px solid white; border-radius: 24px; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 15px; text-align: center; animation: rewardReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes rewardReveal { 0% { transform: scale(0) rotate(-45deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
         #reward-emoji { font-size: 90px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); }
         #reward-name { font-size: 24px; font-weight: 900; color: white; }
 
-        /* Chat System */
+        /* Chat Layouts */
         #chat-box { height: 65%; border: 1px solid rgba(255,255,255,0.08); overflow-y: auto; padding: 20px; margin-bottom: 15px; border-radius: 16px; background: rgba(0, 0, 0, 0.2); }
         .chat-line { margin-bottom: 10px; font-size: 15px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; width: fit-content; }
         .tag-admin { color: #ff0055; font-weight: 900; text-shadow: 0 0 8px rgba(255,0,85,0.5); }
@@ -88,7 +85,7 @@
 </head>
 <body>
 
-    <!-- Pack Overlay Screen -->
+    <!-- Cinematic Openings Screen Layer Overlay -->
     <div id="unbox-overlay">
         <div id="animated-pack-wrapper" class="animated-pack" onclick="triggerBurstSequence()">🎁</div>
         <div id="reward-display-card">
@@ -99,7 +96,7 @@
         </div>
     </div>
 
-    <!-- Login Gateway Overlay Component -->
+    <!-- Active account router validation screen gateway controller -->
     <div id="auth-screen">
         <h1>BLOOK LABS V7</h1>
         <div class="auth-container">
@@ -110,70 +107,74 @@
         </div>
     </div>
 
-    <!-- Sidebar Menu Layout -->
+    <!-- Sidebar Layout Components -->
     <div id="sidebar">
         <h2 id="user-display">GIO 👑</h2>
         <div class="coin-widget">🪙 <span id="coin-count">0</span></div>
         <button class="nav-btn active-btn" id="btn-market" onclick="setView('market')">🛒 Market Packs</button>
-        <button class="nav-btn" id="btn-blocks" onclick="setView('blooks')">🎒 My Collection</button>
-        <button class="nav-btn" id="btn-merge" onclick="setView('merge')">🧬 Fusion Merge</button>
+        <button class="nav-btn" id="btn-blooks" onclick="setView('blooks')">🎒 My Collection</button>
+        <button class="nav-btn" id="btn-fusion" onclick="setView('fusion')">🧪 Fusion Lab</button>
         <button class="nav-btn" id="btn-wheel" onclick="setView('wheel')">🎡 Reward Wheel</button>
         <button class="nav-btn" id="btn-chat" onclick="setView('chat')">💬 Lobby Chat</button>
         <button class="nav-btn logout-btn" onclick="logoutAccount()">🚪 Log Out</button>
     </div>
 
-    <!-- Active App Windows Container Panel Manager -->
+    <!-- Active Window Panels -->
     <div id="main-content">
-        <!-- Market Window -->
+        <!-- Pack Market Node Container -->
         <div id="market" class="window active">
-            <h1 style="color: #ffcc00; font-size: 32px;">Blook Market</h1>
-            <p style="color: #b399ff; margin-bottom: 20px;">Open premium boxes with strict pull percentages</p>
+            <h1 style="color: #ffcc00; font-size: 32px; margin-bottom: 5px;">Blook Market</h1>
+            <p style="color: #b399ff; margin-bottom: 25px;">Open custom algorithmic crates displaying precise drop mechanics.</p>
             <div class="card-grid" id="packs-container"></div>
         </div>
 
-        <!-- Inventory List -->
+        <!-- Collection Inventory Dashboard Grid -->
         <div id="blooks" class="window">
             <h1 style="color: #ff007f; font-size: 32px; margin-bottom: 20px;">My Blooks</h1>
             <div class="card-grid" id="blooks-container"></div>
         </div>
 
-        <!-- Fusion Merge Window -->
-        <div id="merge" class="window">
-            <h1 style="color: #ffaa00; font-size: 32px;">🧬 Blook Fusion Machine</h1>
-            <p style="color: #b399ff;">Combine 3 duplicates of the **SAME RARITY** to fuse into 1 Blook of the next higher rarity tier!</p>
+        <!-- Blook Fusion Crafting System Forge Layer -->
+        <div id="fusion" class="window">
+            <h1 style="color: #00bcff; font-size: 32px; margin-bottom: 5px;">Fusion Laboratory</h1>
+            <p style="color: #b399ff; margin-bottom: 30px;">Merge exactly 2 duplicate Blooks of the same rarity to synthesize a guaranteed higher-tier item!</p>
             
-            <div class="merge-box-grid">
-                <div class="merge-slot" id="slot-0">Slot 1</div>
-                <div class="merge-slot" id="slot-1">Slot 2</div>
-                <div class="merge-slot" id="slot-2">Slot 3</div>
-            </div>
-            
-            <div style="text-align:center; margin-bottom: 30px;">
-                <button class="btn-play" style="background: linear-gradient(135deg, #ffaa00 0%, #ff5500 100%); padding: 15px 40px; font-size: 18px;" onclick="executeFusionMerge()">ENGAGE FUSION GRID</button>
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);">
+                <div id="slot-1" class="fusion-slot">
+                    <div style="font-size: 40px; color: rgba(255,255,255,0.15);">🧬</div>
+                    <div style="font-size: 14px; font-weight: bold; margin-top: 5px; color: rgba(255,255,255,0.4);">Select Blook 1</div>
+                </div>
+                <div style="font-size: 40px; font-family: 'Fredoka One'; color: #ff007f;">+</div>
+                <div id="slot-2" class="fusion-slot">
+                    <div style="font-size: 40px; color: rgba(255,255,255,0.15);">🧬</div>
+                    <div style="font-size: 14px; font-weight: bold; margin-top: 5px; color: rgba(255,255,255,0.4);">Select Blook 2</div>
+                </div>
+                <div style="font-size: 40px; font-family: 'Fredoka One'; color: #00bcff;">=</div>
+                <button class="btn-play" style="padding: 20px 40px; font-size: 20px;" onclick="executeFusionForge()">FORGE UPGRADE</button>
             </div>
 
-            <h3 style="margin-bottom:15px; color:#e0ccff;">Select Duplicate Items to Load:</h3>
-            <div class="card-grid" id="merge-inventory-selection"></div>
+            <h3 style="margin-top: 40px; color: white;">Select Duplicate Candidates from Inventory:</h3>
+            <div class="card-grid" id="fusion-candidates-container"></div>
         </div>
 
-        <!-- Wheel Window -->
+        <!-- Reward System -->
         <div id="wheel" class="window" style="text-align: center;">
             <h1 style="color: #00bcff; font-size: 32px;">Hourly Cash Wheel</h1>
             <div style="font-size: 100px; margin: 30px 0;">🎡</div>
             <button class="btn-play" onclick="spinWheel()" style="padding: 15px 40px; font-size: 20px;">SPIN THE WHEEL</button>
         </div>
 
-        <!-- Chat Window -->
+        <!-- Chat Panels -->
         <div id="chat" class="window">
             <h1 style="color: #00cc66; font-size: 32px; margin-bottom: 5px;">Lobby Chat</h1>
             <div id="chat-box"></div>
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="chat-msg" style="width:75%;" placeholder="Say hello to the chat logs...">
+                <input type="text" id="chat-msg" style="width:75%;" placeholder="Type chat logs entry line...">
                 <button class="btn-play" onclick="sendChat()">Send</button>
             </div>
         </div>
 
-        <!-- System Admin Hub Console -->
+        <!-- Master Command Center Configuration Layout Interface -->
         <div id="admin-panel">
             <h2 style="color:#ff0055; margin-bottom: 15px;">👑 Admin Power Console Panel</h2>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
@@ -194,69 +195,63 @@
     </div>
 
     <script>
-        // Expanded Database - 8 Unique Themed Packs Mapped Out
+        // Highly expanded 8-pack dataset configuration map matrix
         const BLOOK_DETAILS = {
+            // Medieval Pack
             'Knight': { emoji: '⚔️', rarity: 'common', rate: 50 },
             'Queen': { emoji: '👸', rarity: 'rare', rate: 25 },
             'King': { emoji: '👑', rarity: 'rare', rate: 15 },
             'Wizard': { emoji: '🧙', rarity: 'epic', rate: 8.5 },
             'Dragon': { emoji: '🐉', rarity: 'legendary', rate: 1.5 },
-            
+            // Space Pack
             'Meteor': { emoji: '☄️', rarity: 'common', rate: 60 },
             'Astronaut': { emoji: '👨‍🚀', rarity: 'rare', rate: 25 },
             'Alien': { emoji: '👽', rarity: 'epic', rate: 13 },
             'Star': { emoji: '⭐', rarity: 'legendary', rate: 2 },
-            
+            // Anime Pack
             'Ninja': { emoji: '🥷', rarity: 'common', rate: 70 },
             'Samurai': { emoji: '👺', rarity: 'rare', rate: 24 },
             'Titan': { emoji: '👹', rarity: 'legendary', rate: 6 },
-            
+            // Chroma Master Pack
             'Rainbow Slime': { emoji: '🌈', rarity: 'chroma', rate: 70 },
             'Neon Cat': { emoji: '🐱', rarity: 'chroma', rate: 30 },
-
-            // Aquatic Pack Additions
+            // Dino Pack
+            'Stegosaurus': { emoji: '🦖', rarity: 'common', rate: 55 },
+            'T-Rex': { emoji: '🐊', rarity: 'rare', rate: 30 },
+            'Pterodactyl': { emoji: '🦅', rarity: 'epic', rate: 13 },
+            'Fossil Core': { emoji: '🦴', rarity: 'legendary', rate: 2 },
+            // Aquatic Pack
             'Goldfish': { emoji: '🐟', rarity: 'common', rate: 65 },
-            'Shark': { emoji: '🦈', rarity: 'rare', rate: 25 },
-            'Kraken': { emoji: '🐙', rarity: 'epic', rate: 9 },
-            'Poseidon': { emoji: '🧜‍♂️', rarity: 'legendary', rate: 1 },
-
-            // Dino Pack Additions
-            'Stegosaurus': { emoji: '🦕', rarity: 'common', rate: 60 },
-            'Raptor': { emoji: '🦖', rarity: 'rare', rate: 28 },
-            'T-Rex': { emoji: '👑🦖', rarity: 'epic', rate: 10 },
-            'Meteor Strike': { emoji: '💥', rarity: 'legendary', rate: 2 },
-
-            // Halloween Pack Additions
-            'Ghost': { emoji: '👻', rarity: 'common', rate: 55 },
-            'Vampire': { emoji: '🧛', rarity: 'rare', rate: 30 },
-            'Grim Reaper': { emoji: '💀', rarity: 'epic', rate: 13 },
-            'Spooky Pumpkin': { emoji: '🎃', rarity: 'legendary', rate: 2 },
-
-            // Holiday Pack Additions
+            'Shark': { emoji: '🦈', rarity: 'rare', rate: 23 },
+            'Kraken Tentacle': { emoji: '🐙', rarity: 'epic', rate: 10 },
+            'Leviathan': { emoji: '🐋', rarity: 'legendary', rate: 2 },
+            // Mythical Pack
             'Elf': { emoji: '🧝', rarity: 'common', rate: 50 },
-            'Reindeer': { emoji: '🦌', rarity: 'rare', rate: 32 },
-            'Snow Globe': { emoji: '🔮', rarity: 'epic', rate: 15 },
-            'Santa': { emoji: '🎅', rarity: 'legendary', rate: 3 }
+            'Pegasus': { emoji: '🦄', rarity: 'rare', rate: 30 },
+            'Phoenix': { emoji: '🦅', rarity: 'epic', rate: 17 },
+            'God Zeus': { emoji: '⚡', rarity: 'legendary', rate: 3 },
+            // Cyberpunk Pack
+            'Hacker Drone': { emoji: '🛸', rarity: 'common', rate: 60 },
+            'Cyborg Runner': { emoji: '🏃‍♂️', rarity: 'rare', rate: 25 },
+            'Neon City AI': { emoji: '🧠', rarity: 'epic', rate: 13 },
+            'Quantum Core': { emoji: '🔋', rarity: 'legendary', rate: 2 }
         };
 
         const PACKS = {
             Medieval: { cost: 20, emoji: '🛡️', blooks: ['Knight', 'Queen', 'King', 'Wizard', 'Dragon'] },
-            Space: { cost: 35, emoji: '🚀', blooks: ['Meteor', 'Astronaut', 'Alien', 'Star'] },
-            Anime: { cost: 50, emoji: '⛩️', blooks: ['Ninja', 'Samurai', 'Titan'] },
-            Aquatic: { cost: 40, emoji: '🌊', blooks: ['Goldfish', 'Shark', 'Kraken', 'Poseidon'] },
-            Dino: { cost: 45, emoji: '🦴', blooks: ['Stegosaurus', 'Raptor', 'T-Rex', 'Meteor Strike'] },
-            Halloween: { cost: 60, emoji: '🎃', blooks: ['Ghost', 'Vampire', 'Grim Reaper', 'Spooky Pumpkin'] },
-            Holiday: { cost: 60, emoji: '🎄', blooks: ['Elf', 'Reindeer', 'Snow Globe', 'Santa'] },
+            Space: { cost: 25, emoji: '🚀', blooks: ['Meteor', 'Astronaut', 'Alien', 'Star'] },
+            Anime: { cost: 30, emoji: '⛩️', blooks: ['Ninja', 'Samurai', 'Titan'] },
+            Dino: { cost: 35, emoji: '🌴', blooks: ['Stegosaurus', 'T-Rex', 'Pterodactyl', 'Fossil Core'] },
+            Aquatic: { cost: 40, emoji: '🌊', blooks: ['Goldfish', 'Shark', 'Kraken Tentacle', 'Leviathan'] },
+            Mythical: { cost: 45, emoji: '🔮', blooks: ['Elf', 'Pegasus', 'Phoenix', 'God Zeus'] },
+            Cyberpunk: { cost: 50, emoji: '⚡', blooks: ['Hacker Drone', 'Cyborg Runner', 'Neon City AI', 'Quantum Core'] },
             Chroma: { cost: 150, emoji: '✨', blooks: ['Rainbow Slime', 'Neon Cat'] }
         };
 
-        const RARITY_TIERS = ['common', 'rare', 'epic', 'legendary', 'chroma'];
-
         let currentUser = null;
         let selectedPackToOpen = null;
-        let currentMergeSlots = [null, null, null];
+        let fusionSelection = [null, null];
 
-        // Database Management
         function getDB() { try { const db = localStorage.getItem('blook_account_db'); return db ? JSON.parse(db) : {}; } catch(e) { return {}; } }
         function saveDB(database) { localStorage.setItem('blook_account_db', JSON.stringify(database)); }
 
@@ -264,6 +259,7 @@
             const username = document.getElementById('username-in').value.trim();
             const password = document.getElementById('password-in').value.trim();
             if (!username || !password) return alert("Please type your username and password!");
+
             const database = getDB();
 
             if (type === 'signup') {
@@ -273,13 +269,13 @@
                     rank: (username.toLowerCase() === 'gio') ? 'admin' : 'user'
                 };
                 saveDB(database);
-                alert("Account created successfully! Click Log In now to play.");
+                alert("Account verified & created! Click Log In now.");
                 return;
             }
 
             if (type === 'login') {
                 const userRecord = database[username.toLowerCase()];
-                if (!userRecord || userRecord.password !== password) return alert("Wrong username or password combo!");
+                if (!userRecord || userRecord.password !== password) return alert("Wrong username or password!");
                 currentUser = userRecord;
                 launchDashboard();
             }
@@ -298,24 +294,24 @@
             document.getElementById('admin-panel').style.display = (currentUser.rank === 'admin' || currentUser.rank === 'mod') ? 'block' : 'none';
         }
 
-        function saveUserData() { if (!currentUser) return; const database = getDB(); database[currentUser.username.toLowerCase()] = currentUser; saveDB(database); }
         function logoutAccount() { currentUser = null; document.getElementById('sidebar').style.display = 'none'; document.getElementById('main-content').style.display = 'none'; document.getElementById('auth-screen').style.display = 'flex'; }
+        function saveUserData() { if (currentUser) { const database = getDB(); database[currentUser.username.toLowerCase()] = currentUser; saveDB(database); } }
 
         function modifyRole() {
             const targetName = document.getElementById('adm-target-user').value.trim().toLowerCase();
             const selectedRole = document.getElementById('adm-role-select').value;
             const database = getDB();
-            if (!database[targetName]) return alert("Target player username not found!");
+            if (!database[targetName]) return alert("Target username not found!");
             database[targetName].rank = selectedRole;
             saveDB(database);
-            alert(`Updated \({database[targetName].username}'s permissions to:\){selectedRole}`);
+            alert(`Updated permissions status successfully.`);
             if (currentUser.username.toLowerCase() === targetName) { currentUser.rank = selectedRole; checkAdminVisibility(); updateUI(); }
         }
 
-        // Count instances of each Blook in inventory
+        // Compiles accurate counts of inventory assets
         function getInventoryCounts() {
             const counts = {};
-            currentUser.blooks.forEach(b => { counts[b] = (counts[b] || 0) + 1; });
+            currentUser.blooks.forEach(b => counts[b] = (counts[b] || 0) + 1);
             return counts;
         }
 
@@ -327,41 +323,26 @@
             document.getElementById('user-display').innerHTML = currentUser.username + rankTag;
             document.getElementById('coin-count').innerText = currentUser.coins;
             
+            // Render basic collection view list log matrix grids
             const inv = document.getElementById('blooks-container');
             inv.innerHTML = '';
-            
             const counts = getInventoryCounts();
+
             for (let b in counts) {
                 const item = BLOOK_DETAILS[b] || { emoji: '📦', rarity: 'common' };
                 inv.innerHTML += `
                     <div class="blook-card">
+                        ${counts[b] > 1 ? `<div class="dupe-badge">x${counts[b]}</div>` : ''}
                         <div class="blook-avatar">${item.emoji}</div>
                         <div style="font-size:14px;">${b}</div>
                         <span class="rarity ${item.rarity}">${item.rarity}</span>
-                        ${counts[b] > 1 ? `<div class="dupe-badge">x${counts[b]}</div>` : ''}
                     </div>`;
             }
+            renderFusionLabOptions();
             saveUserData();
-            renderMergeInventory();
-            updateMergeGridSlots();
         }
 
         function setView(id) {
             document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-btn'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('btn-' + id).classList.add('active-btn');
-        }
-
-        function renderPacks() {
-            const container = document.getElementById('packs-container');
-            container.innerHTML = '';
-            for (let name in PACKS) {
-                let ratesHTML = '';
-                PACKS[name].blooks.forEach(b => {
-                    const item = BLOOK_DETAILS[b];
-                    ratesHTML += `<div class="rate-row"><span>${item.emoji} ${b}</span><span>${item.rate}%</span></div>`;
-                });
-
-                container.innerHTML += `
-                    <div class="pack-card" onclick="openPackCinematic('${
+            document.getElementById(id
